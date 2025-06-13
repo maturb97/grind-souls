@@ -185,8 +185,8 @@ export function Dashboard() {
                         />
                       </div>
                       
-                      {/* Tooltip with description */}
-                      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                      {/* Always visible description */}
+                      <div className="mt-3">
                         <p className="text-xs text-muted-foreground leading-relaxed p-3 bg-surface-elevated rounded-lg border border-border-light">
                           {lifeArea.description}
                         </p>
@@ -337,10 +337,10 @@ function QuestCard({ quest, lifeAreas, completed = false }: { quest: Quest; life
           {isRecurring && recurringProgress && (
             <div className="mt-2">
               <div className="flex items-center justify-between text-sm mb-1">
-                <span className="text-gray-600 dark:text-gray-400">
+                <span className="text-muted-foreground">
                   🔄 {formatRecurringDescription(quest)}
                 </span>
-                <span className="text-gray-600 dark:text-gray-400">
+                <span className="text-muted-foreground">
                   Resets in {recurringProgress.timeUntilReset}
                 </span>
               </div>
@@ -352,7 +352,7 @@ function QuestCard({ quest, lifeAreas, completed = false }: { quest: Quest; life
                 animated={true}
               />
               {quest.recurrence!.streak > 0 && (
-                <div className="flex items-center mt-1 text-xs text-orange-600 dark:text-orange-400">
+                <div className="flex items-center mt-1 text-xs text-warning">
                   🔥 {quest.recurrence!.streak} streak
                 </div>
               )}

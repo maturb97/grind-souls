@@ -127,14 +127,14 @@ export function QuestCreateModal({ isOpen, onClose }: QuestCreateModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in">
+      <div className="bg-surface border border-border rounded-xl shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Create New Quest</h2>
+            <h2 className="text-2xl font-bold text-foreground">Create New Quest</h2>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              className="text-muted-foreground hover:text-foreground transition-colors p-2 hover:bg-surface-elevated rounded-lg"
             >
               ✕
             </button>
@@ -143,14 +143,14 @@ export function QuestCreateModal({ isOpen, onClose }: QuestCreateModalProps) {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Title */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-foreground mb-2">
                 Quest Title *
               </label>
               <input
                 type="text"
                 value={formData.title}
                 onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-foreground placeholder-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
                 placeholder="What do you want to accomplish?"
                 required
               />
@@ -158,14 +158,14 @@ export function QuestCreateModal({ isOpen, onClose }: QuestCreateModalProps) {
 
             {/* Description */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-foreground mb-2">
                 Description
               </label>
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                 rows={3}
-                className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-foreground placeholder-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none"
                 placeholder="Optional description..."
               />
             </div>
@@ -173,13 +173,13 @@ export function QuestCreateModal({ isOpen, onClose }: QuestCreateModalProps) {
             {/* Difficulty and Priority */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-foreground mb-2">
                   Difficulty
                 </label>
                 <select
                   value={formData.difficulty}
                   onChange={(e) => setFormData(prev => ({ ...prev, difficulty: e.target.value as Difficulty }))}
-                  className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-gray-900 dark:text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
                 >
                   <option value="trivial">Trivial ({GAME_CONFIG.xp.base.trivial} XP)</option>
                   <option value="easy">Easy ({GAME_CONFIG.xp.base.easy} XP)</option>
@@ -190,13 +190,13 @@ export function QuestCreateModal({ isOpen, onClose }: QuestCreateModalProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-foreground mb-2">
                   Priority
                 </label>
                 <select
                   value={formData.priority}
                   onChange={(e) => setFormData(prev => ({ ...prev, priority: e.target.value as Priority }))}
-                  className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-gray-900 dark:text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
                 >
                   <option value="normal">Normal (1.0x XP)</option>
                   <option value="high">High Priority (1.5x XP)</option>
@@ -206,13 +206,13 @@ export function QuestCreateModal({ isOpen, onClose }: QuestCreateModalProps) {
 
             {/* Life Area */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-foreground mb-2">
                 Life Area *
               </label>
               <select
                 value={formData.lifeAreaId}
                 onChange={(e) => setFormData(prev => ({ ...prev, lifeAreaId: e.target.value }))}
-                className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-gray-900 dark:text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
                 required
               >
                 <option value="">Select Life Area</option>
@@ -225,17 +225,17 @@ export function QuestCreateModal({ isOpen, onClose }: QuestCreateModalProps) {
             </div>
 
             {/* Recurring Options */}
-            <div className="border border-gray-200 dark:border-gray-600 rounded-lg p-4">
+            <div className="border border-border rounded-lg p-4 bg-surface-elevated">
               <div className="flex items-center mb-4">
                 <input
                   type="checkbox"
                   id="isRecurring"
                   checked={formData.isRecurring}
                   onChange={(e) => setFormData(prev => ({ ...prev, isRecurring: e.target.checked }))}
-                  className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  className="h-4 w-4 text-primary border-border rounded focus:ring-primary/20"
                 />
-                <label htmlFor="isRecurring" className="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Make this a recurring quest
+                <label htmlFor="isRecurring" className="ml-3 text-sm font-medium text-foreground">
+                  🔄 Make this a recurring quest
                 </label>
               </div>
 
@@ -243,13 +243,13 @@ export function QuestCreateModal({ isOpen, onClose }: QuestCreateModalProps) {
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <label className="block text-sm font-medium text-foreground mb-2">
                         Frequency
                       </label>
                       <select
                         value={formData.recurrenceType}
                         onChange={(e) => setFormData(prev => ({ ...prev, recurrenceType: e.target.value as RecurrenceType }))}
-                        className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-gray-900 dark:text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
                       >
                         <option value="daily">Daily</option>
                         <option value="weekly">Weekly</option>
@@ -258,7 +258,7 @@ export function QuestCreateModal({ isOpen, onClose }: QuestCreateModalProps) {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <label className="block text-sm font-medium text-foreground mb-2">
                         Target Count
                       </label>
                       <input
@@ -267,14 +267,14 @@ export function QuestCreateModal({ isOpen, onClose }: QuestCreateModalProps) {
                         max="30"
                         value={formData.recurrenceTarget}
                         onChange={(e) => setFormData(prev => ({ ...prev, recurrenceTarget: parseInt(e.target.value) || 1 }))}
-                        className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-gray-900 dark:text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
                       />
                     </div>
 
                     <div className="flex items-end">
-                      <span className="text-sm text-gray-600 dark:text-gray-400">
-                        Complete {formData.recurrenceTarget} time{formData.recurrenceTarget !== 1 ? 's' : ''} per {formData.recurrenceType.slice(0, -2)}
-                      </span>
+                      <div className="text-xs text-muted-foreground p-3 bg-primary/5 rounded-lg border border-primary/10">
+                        Complete <span className="font-medium text-foreground">{formData.recurrenceTarget}</span> time{formData.recurrenceTarget !== 1 ? 's' : ''} per {formData.recurrenceType.slice(0, -2)}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -283,33 +283,33 @@ export function QuestCreateModal({ isOpen, onClose }: QuestCreateModalProps) {
 
             {/* Due Date */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-foreground mb-2">
                 Due Date (Optional)
               </label>
               <input
                 type="date"
                 value={formData.dueDate}
                 onChange={(e) => setFormData(prev => ({ ...prev, dueDate: e.target.value }))}
-                className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-gray-900 dark:text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
               />
             </div>
 
             {/* Tags */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-foreground mb-2">
                 Tags
               </label>
-              <div className="flex flex-wrap gap-2 mb-2">
+              <div className="flex flex-wrap gap-2 mb-3">
                 {formData.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"
+                    className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20"
                   >
                     {tag}
                     <button
                       type="button"
                       onClick={() => removeTag(tag)}
-                      className="ml-1 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
+                      className="ml-2 text-primary hover:text-primary/80 transition-colors"
                     >
                       ×
                     </button>
@@ -322,16 +322,16 @@ export function QuestCreateModal({ isOpen, onClose }: QuestCreateModalProps) {
                   value={tagInput}
                   onChange={(e) => setTagInput(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
-                  className="flex-1 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 rounded-lg border border-border bg-surface px-4 py-3 text-foreground placeholder-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
                   placeholder="Add a tag..."
                 />
                 <Button type="button" onClick={addTag} variant="outline" size="sm">
                   Add
                 </Button>
               </div>
-              <div className="mt-2">
-                <p className="text-xs text-gray-500 dark:text-gray-400">Suggested tags:</p>
-                <div className="flex flex-wrap gap-1 mt-1">
+              <div className="mt-3">
+                <p className="text-xs text-muted-foreground mb-2">Suggested tags:</p>
+                <div className="flex flex-wrap gap-2">
                   {GAME_CONFIG.defaultTags.map((tag) => (
                     <button
                       key={tag}
@@ -341,7 +341,7 @@ export function QuestCreateModal({ isOpen, onClose }: QuestCreateModalProps) {
                           setFormData(prev => ({ ...prev, tags: [...prev.tags, tag] }));
                         }
                       }}
-                      className="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600"
+                      className="text-xs px-3 py-1.5 rounded-full bg-surface-elevated border border-border text-muted-foreground hover:bg-primary/10 hover:text-primary hover:border-primary/20 transition-all"
                     >
                       {tag}
                     </button>
