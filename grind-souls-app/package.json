@@ -2,7 +2,7 @@
   "name": "grind-souls-app",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://dzban.github.io/grind-souls",
+  "homepage": "https://maturb97.github.io/grind-souls",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
