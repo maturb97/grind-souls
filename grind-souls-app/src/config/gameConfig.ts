@@ -36,56 +36,56 @@ export const GAME_CONFIG = {
     {
       id: 'vitality',
       name: 'Vitality',
-      description: 'Health, fitness, and physical wellbeing',
+      description: 'Physical health, fitness, exercise, nutrition, sleep, and overall wellbeing. Build a stronger, healthier body.',
       icon: '❤️',
       color: '#ef4444'
     },
     {
       id: 'attunement',
       name: 'Attunement',
-      description: 'Focus, meditation, and mindfulness',
+      description: 'Mindfulness, meditation, focus, mental clarity, and spiritual practices. Cultivate inner peace and awareness.',
       icon: '🧘',
       color: '#8b5cf6'
     },
     {
       id: 'endurance',
       name: 'Endurance',
-      description: 'Energy, stamina, and perseverance',
+      description: 'Consistency, perseverance, discipline, and building lasting habits. Develop the stamina to achieve long-term goals.',
       icon: '⚡',
       color: '#f59e0b'
     },
     {
       id: 'strength',
       name: 'Strength',
-      description: 'Physical goals and challenges',
+      description: 'Physical training, sports, challenging workouts, and pushing physical limits. Build power and resilience.',
       icon: '💪',
       color: '#dc2626'
     },
     {
       id: 'dexterity',
       name: 'Dexterity',
-      description: 'Skills, hobbies, and craftsmanship',
+      description: 'Skills, hobbies, crafts, creative pursuits, and fine motor abilities. Develop precision and artistry.',
       icon: '🎯',
       color: '#059669'
     },
     {
       id: 'resistance',
       name: 'Resistance',
-      description: 'Stress management and resilience',
+      description: 'Stress management, emotional regulation, mental health, and building psychological resilience.',
       icon: '🛡️',
       color: '#6366f1'
     },
     {
       id: 'intelligence',
       name: 'Intelligence',
-      description: 'Learning, reading, and knowledge',
+      description: 'Learning, reading, studying, research, problem-solving, and expanding knowledge and cognitive abilities.',
       icon: '📚',
       color: '#0891b2'
     },
     {
       id: 'faith',
       name: 'Faith',
-      description: 'Relationships and personal beliefs',
+      description: 'Relationships, community, personal beliefs, social connections, and building meaningful bonds with others.',
       icon: '🤝',
       color: '#be185d'
     }
