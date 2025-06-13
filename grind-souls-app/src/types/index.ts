@@ -58,7 +58,11 @@ export interface Quest {
     type: RecurrenceType;
     frequency: number; // e.g., 3 for "3 times per week"
     completedCount: number;
+    targetCount: number; // How many times needed for the period
     lastReset: Date;
+    nextReset?: Date; // When this period ends
+    isActive: boolean; // Whether recurring is currently active
+    streak: number; // How many periods completed in a row
   };
   
   // Long-term quest support

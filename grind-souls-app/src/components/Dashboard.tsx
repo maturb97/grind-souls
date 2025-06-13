@@ -4,7 +4,9 @@ import { useEffect, useState } from 'react';
 import { useGameStore } from '@/store/useGameStore';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { Button } from '@/components/ui/Button';
+import { QuestCreateModal } from '@/components/QuestCreateModal';
 import { Quest, LifeArea } from '@/types';
+import { getRecurringQuestProgress, formatRecurringDescription } from '@/lib/recurringUtils';
 
 export function Dashboard() {
   const { 
@@ -14,18 +16,16 @@ export function Dashboard() {
     isLoading,
     initializeApp,
     calculateLevelProgress,
-    getOverdueQuests,
-    createQuest
+    getOverdueQuests
   } = useGameStore();
 
-  const [showQuickAddForm, setShowQuickAddForm] = useState(false);
-  const [quickQuestTitle, setQuickQuestTitle] = useState('');
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   useEffect(() => {
     initializeApp();
   }, [initializeApp]);
 
-  const activeQuests = quests.filter(q => !q.isCompleted);
+  const activeQuests = quests.filter(q => !q.isCompleted && (!q.recurrence || q.recurrence.completedCount < q.recurrence.targetCount));
   const completedTodayQuests = quests.filter(q => {
     if (!q.completedAt) return false;
     const today = new Date();
@@ -33,21 +33,6 @@ export function Dashboard() {
     return completedDate.toDateString() === today.toDateString();
   });
   const overdueQuests = getOverdueQuests();
-
-  const handleQuickAddQuest = async () => {
-    if (!quickQuestTitle.trim() || !lifeAreas.length) return;
-    
-    await createQuest({
-      title: quickQuestTitle.trim(),
-      difficulty: 'easy',
-      priority: 'normal',
-      lifeAreaId: lifeAreas[0].id,
-      tags: []
-    });
-    
-    setQuickQuestTitle('');
-    setShowQuickAddForm(false);
-  };
 
   if (isLoading) {
     return (
@@ -82,38 +67,21 @@ export function Dashboard() {
               )}
             </div>
             <Button 
-              onClick={() => setShowQuickAddForm(!showQuickAddForm)}
+              onClick={() => setShowCreateModal(true)}
               className="bg-blue-600 hover:bg-blue-700"
             >
-              + Quick Quest
+              + Create Quest
             </Button>
           </div>
         </div>
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Quick Add Form */}
-        {showQuickAddForm && (
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Add Quick Quest</h3>
-            <div className="flex space-x-3">
-              <input
-                type="text"
-                value={quickQuestTitle}
-                onChange={(e) => setQuickQuestTitle(e.target.value)}
-                placeholder="What do you want to accomplish?"
-                className="flex-1 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                onKeyPress={(e) => e.key === 'Enter' && handleQuickAddQuest()}
-              />
-              <Button onClick={handleQuickAddQuest} disabled={!quickQuestTitle.trim()}>
-                Add Quest
-              </Button>
-              <Button variant="outline" onClick={() => setShowQuickAddForm(false)}>
-                Cancel
-              </Button>
-            </div>
-          </div>
-        )}
+        {/* Quest Creation Modal */}
+        <QuestCreateModal 
+          isOpen={showCreateModal} 
+          onClose={() => setShowCreateModal(false)} 
+        />
 
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -264,9 +232,11 @@ export function Dashboard() {
 }
 
 function QuestCard({ quest, lifeAreas, completed = false }: { quest: Quest; lifeAreas: LifeArea[]; completed?: boolean }) {
-  const { completeQuest } = useGameStore();
+  const { completeQuest, completeRecurringQuest } = useGameStore();
   const lifeArea = lifeAreas.find(la => la.id === quest.lifeAreaId);
   const isOverdue = quest.dueDate && new Date(quest.dueDate) < new Date() && !quest.isCompleted;
+  const isRecurring = !!quest.recurrence;
+  const recurringProgress = isRecurring ? getRecurringQuestProgress(quest) : null;
 
   const difficultyColors = {
     trivial: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
@@ -319,6 +289,31 @@ function QuestCard({ quest, lifeAreas, completed = false }: { quest: Quest; life
             </div>
           )}
 
+          {isRecurring && recurringProgress && (
+            <div className="mt-2">
+              <div className="flex items-center justify-between text-sm mb-1">
+                <span className="text-gray-600 dark:text-gray-400">
+                  🔄 {formatRecurringDescription(quest)}
+                </span>
+                <span className="text-gray-600 dark:text-gray-400">
+                  Resets in {recurringProgress.timeUntilReset}
+                </span>
+              </div>
+              <ProgressBar
+                current={recurringProgress.completed}
+                max={recurringProgress.target}
+                color={recurringProgress.isCompleted ? "#10b981" : "#6366f1"}
+                showText={true}
+                animated={true}
+              />
+              {quest.recurrence!.streak > 0 && (
+                <div className="flex items-center mt-1 text-xs text-orange-600 dark:text-orange-400">
+                  🔥 {quest.recurrence!.streak} streak
+                </div>
+              )}
+            </div>
+          )}
+
           {isOverdue && (
             <p className="text-red-600 dark:text-red-400 text-sm mt-2">
               ⚠️ Overdue since {new Date(quest.dueDate!).toLocaleDateString()}
@@ -329,11 +324,20 @@ function QuestCard({ quest, lifeAreas, completed = false }: { quest: Quest; life
         {!completed && (
           <Button
             size="sm"
-            onClick={() => completeQuest(quest.id)}
-            disabled={quest.totalSubtasks > 0 && quest.completedSubtasks < quest.totalSubtasks}
+            onClick={() => {
+              if (isRecurring) {
+                completeRecurringQuest(quest.id);
+              } else {
+                completeQuest(quest.id);
+              }
+            }}
+            disabled={
+              (quest.totalSubtasks > 0 && quest.completedSubtasks < quest.totalSubtasks) ||
+              (isRecurring && recurringProgress?.isCompleted)
+            }
             className="ml-4"
           >
-            Complete
+            {isRecurring && recurringProgress?.isCompleted ? 'Completed' : 'Complete'}
           </Button>
         )}
       </div>

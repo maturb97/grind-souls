@@ -10,6 +10,7 @@ import {
   Reward 
 } from '@/types';
 import { GAME_CONFIG } from '@/config/gameConfig';
+import { shouldResetRecurringQuest, getNextResetDate } from '@/lib/recurringUtils';
 
 interface GameState {
   // User data
@@ -49,6 +50,10 @@ interface GameState {
   calculateLevelProgress: (lifeAreaId: string) => { current: number; required: number; percentage: number };
   getOverdueQuests: () => Quest[];
   refreshData: () => Promise<void>;
+  
+  // Recurring quest actions
+  checkAndResetRecurringQuests: () => Promise<void>;
+  completeRecurringQuest: (id: string) => Promise<void>;
 }
 
 export const useGameStore = create<GameState>()(
@@ -70,6 +75,7 @@ export const useGameStore = create<GameState>()(
           try {
             await db.initializeDefaultData();
             await get().refreshData();
+            await get().checkAndResetRecurringQuests();
           } catch (error) {
             console.error('Failed to initialize app:', error);
           } finally {
@@ -416,6 +422,122 @@ export const useGameStore = create<GameState>()(
             quest.dueDate && 
             new Date(quest.dueDate) < now
           );
+        },
+
+        // Recurring quest functions
+        checkAndResetRecurringQuests: async () => {
+          try {
+            const { quests, user } = get();
+            const recurringQuests = quests.filter(q => q.recurrence && q.recurrence.isActive);
+            
+            for (const quest of recurringQuests) {
+              if (shouldResetRecurringQuest(quest)) {
+                const newNextReset = getNextResetDate(
+                  quest.recurrence!.type, 
+                  user?.weekStartsOnSunday ?? true
+                );
+                
+                // Check if quest was completed this period
+                const wasCompleted = quest.recurrence!.completedCount >= quest.recurrence!.targetCount;
+                const newStreak = wasCompleted ? quest.recurrence!.streak + 1 : 0;
+                
+                // Reset the quest for new period
+                await db.quests.update(quest.id, {
+                  recurrence: {
+                    ...quest.recurrence!,
+                    completedCount: 0,
+                    lastReset: new Date(),
+                    nextReset: newNextReset,
+                    streak: newStreak
+                  },
+                  isCompleted: false,
+                  completedAt: undefined
+                });
+              }
+            }
+            
+            await get().refreshData();
+          } catch (error) {
+            console.error('Failed to reset recurring quests:', error);
+          }
+        },
+
+        completeRecurringQuest: async (id) => {
+          try {
+            const quest = await db.quests.get(id);
+            if (!quest || !quest.recurrence) return;
+
+            const newCompletedCount = quest.recurrence.completedCount + 1;
+            const isFullyCompleted = newCompletedCount >= quest.recurrence.targetCount;
+
+            // Calculate XP/currency rewards (same as regular quest completion)
+            const isRareQuest = Math.random() < GAME_CONFIG.currency.rareQuestChance;
+            const multiplier = isRareQuest ? GAME_CONFIG.currency.rareQuestMultiplier : 1;
+
+            let finalXP = quest.xpReward * multiplier;
+            let finalCurrency = quest.currencyReward * multiplier;
+
+            // Check for level boost bonus
+            const { lifeAreas, user } = get();
+            const currentLifeArea = lifeAreas.find(la => la.id === quest.lifeAreaId);
+            if (currentLifeArea && user) {
+              const maxLevel = Math.max(...lifeAreas.map(la => la.level));
+              const levelDifference = maxLevel - currentLifeArea.level;
+              
+              if (levelDifference >= GAME_CONFIG.xp.levelBoostThreshold) {
+                finalXP *= GAME_CONFIG.xp.levelBoostMultiplier;
+                finalCurrency *= GAME_CONFIG.xp.levelBoostMultiplier;
+              }
+            }
+
+            // Update quest with new completion count
+            await db.quests.update(id, {
+              recurrence: {
+                ...quest.recurrence,
+                completedCount: newCompletedCount
+              },
+              isCompleted: isFullyCompleted,
+              completedAt: isFullyCompleted ? new Date() : undefined,
+              wasRareQuest: isRareQuest,
+              xpReward: Math.floor(finalXP),
+              currencyReward: Math.floor(finalCurrency)
+            });
+
+            // Award XP and currency
+            if (user) {
+              await db.users.update(user.id, {
+                totalXP: user.totalXP + Math.floor(finalXP),
+                totalCurrency: user.totalCurrency + Math.floor(finalCurrency),
+                lastActiveAt: new Date()
+              });
+            }
+
+            // Update life area
+            if (currentLifeArea) {
+              const newTotalXP = currentLifeArea.totalXP + Math.floor(finalXP);
+              const nextLevelXP = GAME_CONFIG.xp.levelRequirements(currentLifeArea.level + 1);
+              
+              let newLevel = currentLifeArea.level;
+              let newCurrentXP = currentLifeArea.currentXP + Math.floor(finalXP);
+              
+              // Level up logic
+              while (newCurrentXP >= nextLevelXP) {
+                newCurrentXP -= nextLevelXP;
+                newLevel++;
+              }
+
+              await db.lifeAreas.update(currentLifeArea.id, {
+                level: newLevel,
+                currentXP: newCurrentXP,
+                totalXP: newTotalXP,
+                updatedAt: new Date()
+              });
+            }
+
+            await get().refreshData();
+          } catch (error) {
+            console.error('Failed to complete recurring quest:', error);
+          }
         }
       }),
       {
