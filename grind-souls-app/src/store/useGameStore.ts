@@ -333,6 +333,7 @@ export const useGameStore = create<GameState>()(
               currentXP: 0,
               totalXP: 0,
               isCustom: true,
+              isActive: true,
               createdAt: new Date(),
               updatedAt: new Date()
             };
@@ -355,16 +356,16 @@ export const useGameStore = create<GameState>()(
 
         deleteLifeArea: async (id) => {
           try {
-            // Check if there are quests using this life area
-            const questsUsingArea = await db.quests.where('lifeAreaId').equals(id).count();
-            if (questsUsingArea > 0) {
-              throw new Error(`Cannot delete life area: ${questsUsingArea} quests are still using it`);
+            // Check if there are active quests using this life area
+            const activeQuestsUsingArea = await db.quests.where('lifeAreaId').equals(id).and(quest => !quest.isCompleted).count();
+            if (activeQuestsUsingArea > 0) {
+              throw new Error(`Cannot delete life area: ${activeQuestsUsingArea} active quests are still using it. Complete or delete the quests first.`);
             }
             
             // Only allow deletion of custom life areas
             const lifeArea = await db.lifeAreas.get(id);
             if (lifeArea && !lifeArea.isCustom) {
-              throw new Error('Cannot delete default life areas');
+              throw new Error('Cannot delete default life areas. You can deactivate them instead.');
             }
             
             await db.lifeAreas.delete(id);

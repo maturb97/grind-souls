@@ -36,6 +36,23 @@ export class GrindSoulsDB extends Dexie {
       userStats: 'id, userId, date, questsCompleted, xpEarned, currencyEarned, streakDays'
     });
 
+    // Version 2: Add isActive field to lifeAreas
+    this.version(2).stores({
+      users: 'id, name, createdAt, lastActiveAt',
+      lifeAreas: 'id, name, level, totalXP, isCustom, isActive, createdAt, updatedAt',
+      quests: 'id, title, difficulty, priority, lifeAreaId, isCompleted, completedAt, createdAt, updatedAt, dueDate, [lifeAreaId+isCompleted]',
+      subtasks: 'id, questId, title, difficulty, priority, isCompleted, completedAt, createdAt, updatedAt',
+      milestones: 'id, questId, title, isCompleted, completedAt, targetDate, createdAt, updatedAt',
+      rewards: 'id, name, cost, category, isCustom, isPurchased, purchasedAt, createdAt, updatedAt',
+      achievements: 'id, name, type, isUnlocked, unlockedAt',
+      userStats: 'id, userId, date, questsCompleted, xpEarned, currencyEarned, streakDays'
+    }).upgrade(async tx => {
+      // Set all existing life areas as active by default
+      await tx.table('lifeAreas').toCollection().modify((lifeArea: Partial<LifeArea>) => {
+        lifeArea.isActive = true;
+      });
+    });
+
     // Hooks for automatic timestamp updates
     this.lifeAreas.hook('creating', (primKey, obj) => {
       obj.id = obj.id || uuidv4();
@@ -121,6 +138,7 @@ export class GrindSoulsDB extends Dexie {
       currentXP: 0,
       totalXP: 0,
       isCustom: false,
+      isActive: true,
       createdAt: new Date(),
       updatedAt: new Date()
     }));

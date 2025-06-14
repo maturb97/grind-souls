@@ -226,7 +226,7 @@ export function QuestCreateModal({ isOpen, onClose }: QuestCreateModalProps) {
                 required
               >
                 <option value="">Select Life Area</option>
-                {lifeAreas.map((area) => (
+                {lifeAreas.filter(area => area.isActive).map((area) => (
                   <option key={area.id} value={area.id}>
                     {area.icon} {area.name}
                   </option>

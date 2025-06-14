@@ -20,6 +20,7 @@ export interface LifeArea {
   currentXP: number;
   totalXP: number;
   isCustom: boolean;
+  isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
   

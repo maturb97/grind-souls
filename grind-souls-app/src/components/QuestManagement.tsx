@@ -274,7 +274,7 @@ export function QuestManagement() {
                   className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
                 >
                   <option value="">All Areas</option>
-                  {lifeAreas.map((area) => (
+                  {lifeAreas.filter(area => area.isActive).map((area) => (
                     <option key={area.id} value={area.id}>
                       {area.icon} {area.name}
                     </option>

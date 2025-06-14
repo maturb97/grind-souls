@@ -33,8 +33,8 @@ export function LifeAreasManagement() {
     initializeApp();
   }, [initializeApp]);
 
-  const defaultLifeAreas = lifeAreas.filter(area => !area.isCustom);
-  const customLifeAreas = lifeAreas.filter(area => area.isCustom);
+  const activeLifeAreas = lifeAreas.filter(area => area.isActive);
+  const inactiveLifeAreas = lifeAreas.filter(area => !area.isActive);
 
   if (isLoading) {
     return (
@@ -134,12 +134,12 @@ export function LifeAreasManagement() {
             <div className="text-xs text-muted-foreground font-medium">Total Areas</div>
           </div>
           <div className="card p-4 text-center hover:scale-105 transition-transform duration-200 animate-fade-in">
-            <div className="text-2xl font-bold text-primary">{defaultLifeAreas.length}</div>
-            <div className="text-xs text-muted-foreground font-medium">Default Areas</div>
+            <div className="text-2xl font-bold text-success">{activeLifeAreas.length}</div>
+            <div className="text-xs text-muted-foreground font-medium">Active Areas</div>
           </div>
           <div className="card p-4 text-center hover:scale-105 transition-transform duration-200 animate-fade-in">
-            <div className="text-2xl font-bold text-success">{customLifeAreas.length}</div>
-            <div className="text-xs text-muted-foreground font-medium">Custom Areas</div>
+            <div className="text-2xl font-bold text-muted-foreground">{inactiveLifeAreas.length}</div>
+            <div className="text-xs text-muted-foreground font-medium">Inactive Areas</div>
           </div>
           <div className="card p-4 text-center hover:scale-105 transition-transform duration-200 animate-fade-in">
             <div className="text-2xl font-bold text-info">{Math.max(...lifeAreas.map(a => a.level))}</div>
@@ -147,47 +147,30 @@ export function LifeAreasManagement() {
           </div>
         </div>
 
-        {/* Default Life Areas */}
+        {/* Active Life Areas */}
         <div className="card mb-8 animate-fade-in">
           <div className="px-6 py-5 border-b border-border">
-            <h2 className="text-xl font-semibold text-foreground">Default Life Areas</h2>
-            <p className="text-sm text-muted-foreground mt-1">Core areas inspired by Dark Souls attributes</p>
+            <h2 className="text-xl font-semibold text-foreground">Active Life Areas</h2>
+            <p className="text-sm text-muted-foreground mt-1">Areas you&apos;re currently focusing on for quests</p>
           </div>
           <div className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {defaultLifeAreas.map((lifeArea) => (
-                <LifeAreaCard
-                  key={lifeArea.id}
-                  lifeArea={lifeArea}
-                  onEdit={() => setEditingLifeArea(lifeArea)}
-                  showDelete={false}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Custom Life Areas */}
-        <div className="card animate-fade-in">
-          <div className="px-6 py-5 border-b border-border">
-            <h2 className="text-xl font-semibold text-foreground">Custom Life Areas</h2>
-            <p className="text-sm text-muted-foreground mt-1">Your personalized areas for specific goals</p>
-          </div>
-          <div className="p-6">
-            {customLifeAreas.length === 0 ? (
+            {activeLifeAreas.length === 0 ? (
               <div className="text-center py-12">
-                <div className="text-6xl mb-4">🎯</div>
-                <p className="text-muted-foreground font-medium mb-2">No custom life areas yet</p>
-                <p className="text-sm text-muted-foreground">Create your first custom area to get started!</p>
+                <div className="text-6xl mb-4">😴</div>
+                <p className="text-muted-foreground font-medium mb-2">No active life areas</p>
+                <p className="text-sm text-muted-foreground">Activate some areas to start creating quests!</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {customLifeAreas.map((lifeArea) => (
+                {activeLifeAreas.map((lifeArea) => (
                   <LifeAreaCard
                     key={lifeArea.id}
                     lifeArea={lifeArea}
                     onEdit={() => setEditingLifeArea(lifeArea)}
-                    onDelete={async () => {
+                    onToggle={async () => {
+                      await updateLifeArea(lifeArea.id, { isActive: false });
+                    }}
+                    onDelete={lifeArea.isCustom ? async () => {
                       try {
                         if (confirm(`Are you sure you want to delete "${lifeArea.name}"? This action cannot be undone.`)) {
                           await deleteLifeArea(lifeArea.id);
@@ -195,14 +178,48 @@ export function LifeAreasManagement() {
                       } catch (error) {
                         alert(error instanceof Error ? error.message : 'Failed to delete life area');
                       }
-                    }}
-                    showDelete={true}
+                    } : undefined}
+                    isActive={true}
                   />
                 ))}
               </div>
             )}
           </div>
         </div>
+
+        {/* Inactive Life Areas */}
+        {inactiveLifeAreas.length > 0 && (
+          <div className="card animate-fade-in">
+            <div className="px-6 py-5 border-b border-border">
+              <h2 className="text-xl font-semibold text-foreground">Inactive Life Areas</h2>
+              <p className="text-sm text-muted-foreground mt-1">Areas you can reactivate when needed</p>
+            </div>
+            <div className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {inactiveLifeAreas.map((lifeArea) => (
+                  <LifeAreaCard
+                    key={lifeArea.id}
+                    lifeArea={lifeArea}
+                    onEdit={() => setEditingLifeArea(lifeArea)}
+                    onToggle={async () => {
+                      await updateLifeArea(lifeArea.id, { isActive: true });
+                    }}
+                    onDelete={lifeArea.isCustom ? async () => {
+                      try {
+                        if (confirm(`Are you sure you want to delete "${lifeArea.name}"? This action cannot be undone.`)) {
+                          await deleteLifeArea(lifeArea.id);
+                        }
+                      } catch (error) {
+                        alert(error instanceof Error ? error.message : 'Failed to delete life area');
+                      }
+                    } : undefined}
+                    isActive={false}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );
@@ -211,17 +228,23 @@ export function LifeAreasManagement() {
 function LifeAreaCard({
   lifeArea,
   onEdit,
+  onToggle,
   onDelete,
-  showDelete = true
+  isActive
 }: {
   lifeArea: LifeArea;
   onEdit?: () => void;
+  onToggle?: () => void;
   onDelete?: () => void;
-  showDelete?: boolean;
+  isActive: boolean;
 }) {
   return (
     <div 
-      className="rounded-xl p-6 border border-border bg-surface hover:border-border-light transition-all duration-200 hover:shadow-md"
+      className={`rounded-xl p-6 border transition-all duration-200 hover:shadow-md ${
+        isActive 
+          ? 'border-border bg-surface hover:border-border-light' 
+          : 'border-border bg-surface-elevated opacity-75'
+      }`}
       style={{ borderLeftColor: lifeArea.color, borderLeftWidth: '4px' }}
     >
       <div className="flex items-start justify-between mb-4">
@@ -243,18 +266,33 @@ function LifeAreaCard({
       </p>
 
       <div className="flex space-x-2">
+        {onToggle && (
+          <Button
+            onClick={onToggle}
+            variant="outline"
+            size="sm"
+            className={`flex-1 ${
+              isActive 
+                ? 'text-warning border-warning hover:bg-warning/10' 
+                : 'text-success border-success hover:bg-success/10'
+            }`}
+          >
+            {isActive ? '⏸️ Deactivate' : '▶️ Activate'}
+          </Button>
+        )}
+        
         {onEdit && (
           <Button
             onClick={onEdit}
             variant="outline"
             size="sm"
-            className="flex-1"
+            className="px-3"
           >
-            ✏️ Edit
+            ✏️
           </Button>
         )}
         
-        {showDelete && onDelete && (
+        {onDelete && (
           <Button
             onClick={onDelete}
             variant="outline"
