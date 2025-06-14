@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useGameStore } from '@/store/useGameStore';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { Button } from '@/components/ui/Button';
@@ -9,6 +10,7 @@ import { Quest, LifeArea } from '@/types';
 import { getRecurringQuestProgress, formatRecurringDescription } from '@/lib/recurringUtils';
 
 export function Dashboard() {
+  const router = useRouter();
   const { 
     user, 
     lifeAreas, 
@@ -70,7 +72,7 @@ export function Dashboard() {
             </div>
             <div className="flex space-x-3">
               <Button
-                onClick={() => window.location.href = './quests'}
+                onClick={() => router.push('/quests')}
                 variant="outline"
                 className="px-4 py-2.5 font-medium"
               >

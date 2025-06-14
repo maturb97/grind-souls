@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useGameStore } from '@/store/useGameStore';
 import { Button } from '@/components/ui/Button';
 import { ProgressBar } from '@/components/ui/ProgressBar';
@@ -13,6 +14,7 @@ type FilterType = 'all' | 'active' | 'completed' | 'overdue' | 'recurring';
 type SortType = 'newest' | 'oldest' | 'priority' | 'difficulty' | 'due-date' | 'alphabetical';
 
 export function QuestManagement() {
+  const router = useRouter();
   const { 
     user,
     lifeAreas, 
@@ -163,7 +165,7 @@ export function QuestManagement() {
             </div>
             <div className="flex space-x-3">
               <Button
-                onClick={() => window.location.href = '../'}
+                onClick={() => router.push('/')}
                 variant="outline"
                 className="px-4 py-2"
               >
