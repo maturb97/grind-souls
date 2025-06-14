@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useGameStore } from '@/store/useGameStore';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { Button } from '@/components/ui/Button';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { QuestCreateModal } from '@/components/QuestCreateModal';
 import { Quest, LifeArea } from '@/types';
 import { getRecurringQuestProgress, formatRecurringDescription } from '@/lib/recurringUtils';
@@ -70,27 +71,30 @@ export function Dashboard() {
                 </div>
               )}
             </div>
-            <div className="flex space-x-3">
-              <Button
-                onClick={() => router.push('/quests')}
-                variant="outline"
-                className="px-4 py-2.5 font-medium"
-              >
-                📋 Manage Quests
-              </Button>
-              <Button
-                onClick={() => router.push('/rewards')}
-                variant="outline"
-                className="px-4 py-2.5 font-medium"
-              >
-                🏆 Rewards
-              </Button>
-              <Button 
-                onClick={() => setShowCreateModal(true)}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2.5 font-semibold shadow-md hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5"
-              >
-                ✨ Create Quest
-              </Button>
+            <div className="flex items-center space-x-3">
+              <ThemeToggle />
+              <div className="flex space-x-3">
+                <Button
+                  onClick={() => router.push('/quests')}
+                  variant="outline"
+                  className="px-4 py-2.5 font-medium"
+                >
+                  📋 Manage Quests
+                </Button>
+                <Button
+                  onClick={() => router.push('/rewards')}
+                  variant="outline"
+                  className="px-4 py-2.5 font-medium"
+                >
+                  🏆 Rewards
+                </Button>
+                <Button 
+                  onClick={() => setShowCreateModal(true)}
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2.5 font-semibold shadow-md hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5"
+                >
+                  ✨ Create Quest
+                </Button>
+              </div>
             </div>
           </div>
         </div>
