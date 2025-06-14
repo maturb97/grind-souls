@@ -68,12 +68,21 @@ export function Dashboard() {
                 </div>
               )}
             </div>
-            <Button 
-              onClick={() => setShowCreateModal(true)}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2.5 font-semibold shadow-md hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5"
-            >
-              ✨ Create Quest
-            </Button>
+            <div className="flex space-x-3">
+              <Button
+                onClick={() => window.location.href = '/quests'}
+                variant="outline"
+                className="px-4 py-2.5 font-medium"
+              >
+                📋 Manage Quests
+              </Button>
+              <Button 
+                onClick={() => setShowCreateModal(true)}
+                className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2.5 font-semibold shadow-md hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5"
+              >
+                ✨ Create Quest
+              </Button>
+            </div>
           </div>
         </div>
       </header>
