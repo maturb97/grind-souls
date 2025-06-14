@@ -69,6 +69,16 @@ npm run type-check # Run TypeScript compiler check
 - **Subtask support**: Subtasks contribute to parent quest completion
 - **Due date tracking**: Visual warnings for overdue quests
 - **Tagging system**: Customizable tags for organization
+- **Recurring quests**: Daily, weekly, monthly recurring tasks with streak tracking
+- **Quest management page**: Comprehensive filtering, search, and bulk management
+
+#### Quest Management Features
+- **Advanced filtering**: Filter by type (active/completed/overdue/recurring), life area, difficulty, priority
+- **Search functionality**: Full-text search across quest titles, descriptions, and tags
+- **Multiple sorting options**: Sort by date, priority, difficulty, due date, alphabetical
+- **Statistics dashboard**: Overview of total, active, completed, overdue, and recurring quests
+- **Bulk operations**: Complete and delete quests directly from management interface
+- **Navigation integration**: Seamless navigation between dashboard and quest management
 
 #### Life Areas & Leveling
 - **8 Default life areas**: Vitality, Attunement, Endurance, Strength, Dexterity, Resistance, Intelligence, Faith
@@ -131,3 +141,36 @@ All entities include:
 - **Type safety**: Full TypeScript coverage with strict types
 - **Component composition**: Reusable UI components with consistent props
 - **State co-location**: Related state and actions grouped in store slices
+
+## Recent Changes and Issues Resolved
+
+### Quest Creation Modal Styling Fix (Latest)
+**Issue**: Quest creation modal was displaying improperly with formatting issues due to CSS custom properties not being properly recognized.
+
+**Solution**: Reverted modal styling from CSS custom properties (`bg-surface`, `text-foreground`, etc.) back to standard Tailwind classes (`bg-white dark:bg-gray-800`, `text-gray-900 dark:text-white`, etc.) for better browser compatibility and consistent rendering.
+
+**Files Modified**:
+- `src/components/QuestCreateModal.tsx` - Complete styling overhaul with traditional Tailwind classes
+- Form inputs, labels, buttons, and modal container all use standard gray/blue color scheme
+- Maintained dark mode support with explicit dark: prefixes
+
+### Quest Management Page Implementation
+**Feature**: Added comprehensive quest management interface accessible via `/quests` route.
+
+**Implementation**:
+- `src/app/quests/page.tsx` - New route for quest management
+- `src/components/QuestManagement.tsx` - Full-featured management interface
+- `src/components/Dashboard.tsx` - Added navigation button to quest management
+
+**Key Features**:
+- Advanced filtering and search capabilities
+- Statistics overview with quest counts by type
+- Sortable quest list with multiple criteria
+- Direct quest completion and deletion from interface
+- Responsive design with mobile-first approach
+
+### UI/UX Improvements
+- Life area descriptions now always visible (removed hover-only requirement)
+- Enhanced navigation between dashboard and quest management
+- Consistent styling across all modal and form components
+- Improved accessibility with proper contrast and focus states
