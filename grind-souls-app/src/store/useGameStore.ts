@@ -45,6 +45,7 @@ interface GameState {
   // Reward actions
   createReward: (reward: Partial<Reward>) => Promise<void>;
   purchaseReward: (id: string) => Promise<void>;
+  deleteReward: (id: string) => Promise<void>;
   
   // Utility actions
   calculateLevelProgress: (lifeAreaId: string) => { current: number; required: number; percentage: number };
@@ -394,6 +395,15 @@ export const useGameStore = create<GameState>()(
             await get().refreshData();
           } catch (error) {
             console.error('Failed to purchase reward:', error);
+          }
+        },
+
+        deleteReward: async (id) => {
+          try {
+            await db.rewards.delete(id);
+            await get().refreshData();
+          } catch (error) {
+            console.error('Failed to delete reward:', error);
           }
         },
 

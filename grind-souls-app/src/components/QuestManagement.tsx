@@ -171,6 +171,13 @@ export function QuestManagement() {
               >
                 🏠 Dashboard
               </Button>
+              <Button
+                onClick={() => router.push('/rewards')}
+                variant="outline"
+                className="px-4 py-2"
+              >
+                🏆 Rewards
+              </Button>
               <Button 
                 onClick={() => setShowCreateModal(true)}
                 className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2.5 font-semibold shadow-md hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5"
