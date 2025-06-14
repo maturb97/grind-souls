@@ -70,7 +70,7 @@ export function Dashboard() {
             </div>
             <div className="flex space-x-3">
               <Button
-                onClick={() => window.location.href = '/quests'}
+                onClick={() => window.location.href = './quests'}
                 variant="outline"
                 className="px-4 py-2.5 font-medium"
               >

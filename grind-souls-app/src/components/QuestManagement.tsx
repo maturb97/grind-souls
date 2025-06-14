@@ -163,7 +163,7 @@ export function QuestManagement() {
             </div>
             <div className="flex space-x-3">
               <Button
-                onClick={() => window.location.href = '/'}
+                onClick={() => window.location.href = '../'}
                 variant="outline"
                 className="px-4 py-2"
               >
