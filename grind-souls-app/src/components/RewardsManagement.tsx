@@ -71,7 +71,7 @@ export function RewardsManagement() {
                   <div className="flex items-center space-x-2 bg-surface-elevated px-4 py-2 rounded-full border border-border">
                     <span className="text-warning text-lg">💰</span>
                     <span className="font-semibold text-foreground text-lg">{user.totalCurrency.toLocaleString()}</span>
-                    <span className="text-muted-foreground">Souls</span>
+                    <span className="text-muted-foreground">Goldens</span>
                   </div>
                 </div>
               )}
@@ -92,6 +92,13 @@ export function RewardsManagement() {
                   className="px-4 py-2"
                 >
                   📋 Quests
+                </Button>
+                <Button
+                  onClick={() => router.push('/life-areas')}
+                  variant="outline"
+                  className="px-4 py-2"
+                >
+                  🎯 Life Areas
                 </Button>
                 <Button 
                   onClick={() => setShowCreateModal(true)}
@@ -143,7 +150,7 @@ export function RewardsManagement() {
           </div>
           <div className="card p-4 text-center hover:scale-105 transition-transform duration-200 animate-fade-in">
             <div className="text-2xl font-bold text-warning">{user?.totalCurrency || 0}</div>
-            <div className="text-xs text-muted-foreground font-medium">Souls Balance</div>
+            <div className="text-xs text-muted-foreground font-medium">Goldens Balance</div>
           </div>
         </div>
 
@@ -187,7 +194,7 @@ export function RewardsManagement() {
         <div className="card mb-8 animate-fade-in">
           <div className="px-6 py-5 border-b border-border">
             <h2 className="text-xl font-semibold text-foreground">Available Rewards</h2>
-            <p className="text-sm text-muted-foreground mt-1">Spend your Souls on these rewards</p>
+            <p className="text-sm text-muted-foreground mt-1">Spend your Goldens on these rewards</p>
           </div>
           <div className="p-6">
             {availableRewards.length === 0 ? (
@@ -474,7 +481,7 @@ function RewardModal({
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Cost (Souls) *
+                Cost (Goldens) *
               </label>
               <input
                 type="number"
@@ -487,10 +494,10 @@ function RewardModal({
               <div className="mt-3 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
                 <p className="text-sm font-medium text-blue-900 dark:text-blue-200 mb-2">💡 Suggested Pricing:</p>
                 <div className="grid grid-cols-2 gap-2 text-xs text-blue-800 dark:text-blue-300">
-                  <div>☕ Small: 50 Souls</div>
-                  <div>🍿 Medium: 150 Souls</div>
-                  <div>🎬 Large: 500 Souls</div>
-                  <div>🏖️ Major: 1500 Souls</div>
+                  <div>☕ Small: 50 Goldens</div>
+                  <div>🍿 Medium: 150 Goldens</div>
+                  <div>🎬 Large: 500 Goldens</div>
+                  <div>🏖️ Major: 1500 Goldens</div>
                 </div>
               </div>
             </div>

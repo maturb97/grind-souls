@@ -66,7 +66,7 @@ export function Dashboard() {
                   <div className="flex items-center space-x-2 bg-surface-elevated px-3 py-2 rounded-full border border-border">
                     <span className="text-warning text-lg">💰</span>
                     <span className="font-semibold text-foreground">{user.totalCurrency.toLocaleString()}</span>
-                    <span className="text-muted-foreground">Souls</span>
+                    <span className="text-muted-foreground">Goldens</span>
                   </div>
                 </div>
               )}
@@ -87,6 +87,13 @@ export function Dashboard() {
                   className="px-4 py-2.5 font-medium"
                 >
                   🏆 Rewards
+                </Button>
+                <Button
+                  onClick={() => router.push('/life-areas')}
+                  variant="outline"
+                  className="px-4 py-2.5 font-medium"
+                >
+                  🎯 Life Areas
                 </Button>
                 <Button 
                   onClick={() => setShowCreateModal(true)}

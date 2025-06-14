@@ -41,6 +41,7 @@ interface GameState {
   // Life area actions
   createLifeArea: (lifeArea: Partial<LifeArea>) => Promise<void>;
   updateLifeArea: (id: string, updates: Partial<LifeArea>) => Promise<void>;
+  deleteLifeArea: (id: string) => Promise<void>;
   
   // Reward actions
   createReward: (reward: Partial<Reward>) => Promise<void>;
@@ -349,6 +350,28 @@ export const useGameStore = create<GameState>()(
             await get().refreshData();
           } catch (error) {
             console.error('Failed to update life area:', error);
+          }
+        },
+
+        deleteLifeArea: async (id) => {
+          try {
+            // Check if there are quests using this life area
+            const questsUsingArea = await db.quests.where('lifeAreaId').equals(id).count();
+            if (questsUsingArea > 0) {
+              throw new Error(`Cannot delete life area: ${questsUsingArea} quests are still using it`);
+            }
+            
+            // Only allow deletion of custom life areas
+            const lifeArea = await db.lifeAreas.get(id);
+            if (lifeArea && !lifeArea.isCustom) {
+              throw new Error('Cannot delete default life areas');
+            }
+            
+            await db.lifeAreas.delete(id);
+            await get().refreshData();
+          } catch (error) {
+            console.error('Failed to delete life area:', error);
+            throw error; // Re-throw to show user the error message
           }
         },
 

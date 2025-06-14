@@ -21,7 +21,7 @@ export const GAME_CONFIG = {
     levelBoostMultiplier: 1.2 // 20% bonus XP
   },
   
-  // Currency earned from XP (Souls currency)
+  // Currency earned from XP (Goldens currency)
   currency: {
     // Currency = XP / divisor (rounded up)
     xpToCurrencyDivisor: 4,

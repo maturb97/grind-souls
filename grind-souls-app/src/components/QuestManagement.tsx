@@ -159,7 +159,7 @@ export function QuestManagement() {
                   <div className="flex items-center space-x-2 bg-surface-elevated px-3 py-2 rounded-full border border-border">
                     <span className="text-warning text-lg">💰</span>
                     <span className="font-semibold text-foreground">{user.totalCurrency.toLocaleString()}</span>
-                    <span className="text-muted-foreground">Souls</span>
+                    <span className="text-muted-foreground">Goldens</span>
                   </div>
                 </div>
               )}
@@ -180,6 +180,13 @@ export function QuestManagement() {
                   className="px-4 py-2"
                 >
                   🏆 Rewards
+                </Button>
+                <Button
+                  onClick={() => router.push('/life-areas')}
+                  variant="outline"
+                  className="px-4 py-2"
+                >
+                  🎯 Life Areas
                 </Button>
                 <Button 
                   onClick={() => setShowCreateModal(true)}
@@ -453,7 +460,7 @@ function QuestRow({
             <div className="flex items-center space-x-1">
               <span className="text-warning">💰</span>
               <span className="font-medium text-foreground">{quest.currencyReward}</span>
-              <span className="text-muted-foreground">Souls</span>
+              <span className="text-muted-foreground">Goldens</span>
             </div>
             {quest.dueDate && (
               <div className="flex items-center space-x-1">
