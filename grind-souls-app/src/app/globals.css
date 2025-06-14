@@ -38,22 +38,20 @@
   --radius-lg: 1rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Background System */
-    --background: #0a0a0a;
-    --surface: #171717;
-    --surface-elevated: #262626;
-    
-    /* Text Colors */
-    --foreground: #fafafa;
-    --muted-foreground: #9ca3af;
-    --secondary-foreground: #d1d5db;
-    
-    /* Border & Dividers */
-    --border: #374151;
-    --border-light: #4b5563;
-  }
+.dark {
+  /* Background System */
+  --background: #0a0a0a;
+  --surface: #171717;
+  --surface-elevated: #262626;
+  
+  /* Text Colors */
+  --foreground: #fafafa;
+  --muted-foreground: #9ca3af;
+  --secondary-foreground: #d1d5db;
+  
+  /* Border & Dividers */
+  --border: #374151;
+  --border-light: #4b5563;
 }
 
 @theme inline {

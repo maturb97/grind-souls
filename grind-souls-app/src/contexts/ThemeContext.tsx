@@ -19,35 +19,42 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   // Function to get the actual theme based on system preference
   const getActualTheme = (themeValue: Theme): 'light' | 'dark' => {
     if (themeValue === 'system') {
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      if (typeof window !== 'undefined') {
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      return 'light'; // Default to light during SSR
     }
     return themeValue;
   };
 
   // Apply theme to document
   const applyTheme = (actualTheme: 'light' | 'dark') => {
-    const root = document.documentElement;
-    if (actualTheme === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
+    if (typeof document !== 'undefined') {
+      const root = document.documentElement;
+      if (actualTheme === 'dark') {
+        root.classList.add('dark');
+      } else {
+        root.classList.remove('dark');
+      }
     }
   };
 
   // Initialize theme from localStorage or system preference
   useEffect(() => {
-    const storedTheme = localStorage.getItem('grind-souls-theme') as Theme;
-    const initialTheme = storedTheme || 'system';
-    setTheme(initialTheme);
-    
-    const actual = getActualTheme(initialTheme);
-    setActualTheme(actual);
-    applyTheme(actual);
+    if (typeof window !== 'undefined') {
+      const storedTheme = localStorage.getItem('grind-souls-theme') as Theme;
+      const initialTheme = storedTheme || 'system';
+      setTheme(initialTheme);
+      
+      const actual = getActualTheme(initialTheme);
+      setActualTheme(actual);
+      applyTheme(actual);
+    }
   }, []);
 
   // Listen for system theme changes when theme is set to 'system'
   useEffect(() => {
-    if (theme !== 'system') return;
+    if (theme !== 'system' || typeof window === 'undefined') return;
 
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = (e: MediaQueryListEvent) => {
