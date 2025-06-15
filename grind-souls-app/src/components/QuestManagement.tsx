@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useGameStore } from '@/store/useGameStore';
 import { Button } from '@/components/ui/Button';
 import { ProgressBar } from '@/components/ui/ProgressBar';
-import { MobileNavigation, DesktopNavigation } from '@/components/ui/MobileNavigation';
+import { SimpleSidebar } from '@/components/ui/SimpleSidebar';
 import { QuestCreateModal } from '@/components/QuestCreateModal';
 import { SubtaskManagement } from '@/components/SubtaskManagement';
 import { Quest, LifeArea, Subtask } from '@/types';
@@ -143,23 +143,15 @@ export function QuestManagement() {
   }
 
   return (
-    <div className="min-h-screen bg-background liquid-container">
-      {/* Liquid Background */}
-      <div className="liquid-bg"></div>
-      
-      {/* Navigation */}
-      <MobileNavigation 
+    <div className="min-h-screen bg-background flex">
+      {/* Sidebar */}
+      <SimpleSidebar 
         user={user}
-        onCreateAction={() => setShowCreateModal(true)}
-        createActionLabel="Create Quest"
-      />
-      <DesktopNavigation 
-        user={user}
-        onCreateAction={() => setShowCreateModal(true)}
-        createActionLabel="Create Quest"
+        onCreateQuest={() => setShowCreateModal(true)}
       />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Main Content */}
+      <div className="flex-1 p-6 md:p-8">
         {/* Quest Creation Modal */}
         <QuestCreateModal 
           isOpen={showCreateModal} 
@@ -178,30 +170,30 @@ export function QuestManagement() {
 
         {/* Stats Overview */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-          <div className="glass-card p-4 text-center card-hover animate-spring-in animate-float">
+          <div className="card p-4 text-center hover-lift">
             <div className="text-2xl font-bold text-foreground">{stats.total}</div>
             <div className="text-xs text-muted-foreground font-medium">Total Quests</div>
           </div>
-          <div className="glass-card p-4 text-center card-hover animate-spring-in animate-float" style={{ animationDelay: '0.1s' }}>
+          <div className="card p-4 text-center hover-lift">
             <div className="text-2xl font-bold text-primary">{stats.active}</div>
             <div className="text-xs text-muted-foreground font-medium">Active</div>
           </div>
-          <div className="glass-card p-4 text-center card-hover animate-spring-in animate-float" style={{ animationDelay: '0.2s' }}>
+          <div className="card p-4 text-center hover-lift">
             <div className="text-2xl font-bold text-success">{stats.completed}</div>
             <div className="text-xs text-muted-foreground font-medium">Completed</div>
           </div>
-          <div className="glass-card p-4 text-center card-hover animate-spring-in animate-float" style={{ animationDelay: '0.3s' }}>
+          <div className="card p-4 text-center hover-lift">
             <div className="text-2xl font-bold text-error">{stats.overdue}</div>
             <div className="text-xs text-muted-foreground font-medium">Overdue</div>
           </div>
-          <div className="glass-card p-4 text-center card-hover animate-spring-in animate-float" style={{ animationDelay: '0.4s' }}>
+          <div className="card p-4 text-center hover-lift">
             <div className="text-2xl font-bold text-info">{stats.recurring}</div>
             <div className="text-xs text-muted-foreground font-medium">Recurring</div>
           </div>
         </div>
 
         {/* Filters and Search */}
-        <div className="glass-card mb-8 animate-spring-in" style={{ animationDelay: '0.5s' }}>
+        <div className="card mb-8">
           <div className="px-6 py-5 border-b border-border">
             <h2 className="text-xl font-semibold text-foreground">Filters & Search</h2>
           </div>
@@ -214,7 +206,7 @@ export function QuestManagement() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search by title, description, or tags..."
-                className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-foreground placeholder-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-foreground placeholder-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
               />
             </div>
 
@@ -225,7 +217,7 @@ export function QuestManagement() {
                 <select
                   value={filterType}
                   onChange={(e) => setFilterType(e.target.value as FilterType)}
-                  className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                  className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                 >
                   <option value="all">All ({stats.total})</option>
                   <option value="active">Active ({stats.active})</option>
@@ -240,7 +232,7 @@ export function QuestManagement() {
                 <select
                   value={selectedLifeArea}
                   onChange={(e) => setSelectedLifeArea(e.target.value)}
-                  className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                  className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                 >
                   <option value="">All Areas</option>
                   {lifeAreas.filter(area => area.isActive).map((area) => (
@@ -256,7 +248,7 @@ export function QuestManagement() {
                 <select
                   value={selectedDifficulty}
                   onChange={(e) => setSelectedDifficulty(e.target.value as Difficulty | '')}
-                  className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                  className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                 >
                   <option value="">All Levels</option>
                   <option value="trivial">Trivial</option>
@@ -272,7 +264,7 @@ export function QuestManagement() {
                 <select
                   value={selectedPriority}
                   onChange={(e) => setSelectedPriority(e.target.value as Priority | '')}
-                  className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                  className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                 >
                   <option value="">All Priorities</option>
                   <option value="normal">Normal</option>
@@ -285,7 +277,7 @@ export function QuestManagement() {
                 <select
                   value={sortType}
                   onChange={(e) => setSortType(e.target.value as SortType)}
-                  className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                  className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                 >
                   <option value="newest">Newest First</option>
                   <option value="oldest">Oldest First</option>
@@ -317,7 +309,7 @@ export function QuestManagement() {
         </div>
 
         {/* Quests List */}
-        <div className="glass-card card-hover animate-spring-in" style={{ animationDelay: '0.6s' }}>
+        <div className="card">
           <div className="px-6 py-5 border-b border-border">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-semibold text-foreground">
@@ -357,7 +349,7 @@ export function QuestManagement() {
             )}
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

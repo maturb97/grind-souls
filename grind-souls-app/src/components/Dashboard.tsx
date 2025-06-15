@@ -64,10 +64,10 @@ export function Dashboard() {
 
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="glass p-6 hover-lift">
+          <div className="card p-6 hover-lift">
             <div className="flex items-center">
-              <div className="w-12 h-12 bg-blue-500/10 rounded-2xl flex items-center justify-center">
-                <span className="text-blue-500 text-xl">📋</span>
+              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                <span className="text-blue-600 text-xl">📋</span>
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-muted-foreground">Active Quests</p>
@@ -76,10 +76,10 @@ export function Dashboard() {
             </div>
           </div>
 
-          <div className="glass p-6 hover-lift">
+          <div className="card p-6 hover-lift">
             <div className="flex items-center">
-              <div className="w-12 h-12 bg-green-500/10 rounded-2xl flex items-center justify-center">
-                <span className="text-green-500 text-xl">✅</span>
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                <span className="text-green-600 text-xl">✅</span>
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-muted-foreground">Completed Today</p>
@@ -88,10 +88,10 @@ export function Dashboard() {
             </div>
           </div>
 
-          <div className="glass p-6 hover-lift">
+          <div className="card p-6 hover-lift">
             <div className="flex items-center">
-              <div className="w-12 h-12 bg-red-500/10 rounded-2xl flex items-center justify-center">
-                <span className="text-red-500 text-xl">⚠️</span>
+              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                <span className="text-red-600 text-xl">⚠️</span>
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-muted-foreground">Overdue</p>
@@ -100,10 +100,10 @@ export function Dashboard() {
             </div>
           </div>
 
-          <div className="glass p-6 hover-lift">
+          <div className="card p-6 hover-lift">
             <div className="flex items-center">
-              <div className="w-12 h-12 bg-purple-500/10 rounded-2xl flex items-center justify-center">
-                <span className="text-purple-500 text-xl">🎯</span>
+              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                <span className="text-purple-600 text-xl">🎯</span>
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-muted-foreground">Life Areas</p>
@@ -114,7 +114,7 @@ export function Dashboard() {
         </div>
 
         {/* Life Areas Progress */}
-        <div className="glass mb-8">
+        <div className="card mb-8">
           <div className="px-6 py-5 border-b border-border">
             <h2 className="text-xl font-semibold text-foreground">Life Areas Progress</h2>
             <p className="text-sm text-muted-foreground mt-1">Level up your character stats by completing quests</p>
@@ -124,7 +124,7 @@ export function Dashboard() {
               {lifeAreas.map((lifeArea) => {
                 const progress = calculateLevelProgress(lifeArea.id);
                 return (
-                  <div key={lifeArea.id} className="glass p-4 hover-lift">
+                  <div key={lifeArea.id} className="card p-4 hover-lift">
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center space-x-3">
                         <span className="text-3xl">{lifeArea.icon}</span>
@@ -154,7 +154,7 @@ export function Dashboard() {
                     </div>
                     
                     <div className="mt-3">
-                      <p className="text-xs text-muted-foreground p-3 bg-white/30 rounded-xl border border-gray-200/30">
+                      <p className="text-xs text-muted-foreground p-3 bg-surface-elevated rounded-lg border border-border">
                         {lifeArea.description}
                       </p>
                     </div>
@@ -168,7 +168,7 @@ export function Dashboard() {
         {/* Recent Quests */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Active Quests */}
-          <div className="glass">
+          <div className="card">
             <div className="px-6 py-5 border-b border-border">
               <h2 className="text-xl font-semibold text-foreground">Active Quests</h2>
               <p className="text-sm text-muted-foreground mt-1">Your current adventures</p>
@@ -198,7 +198,7 @@ export function Dashboard() {
           </div>
 
           {/* Recent Completions */}
-          <div className="glass">
+          <div className="card">
             <div className="px-6 py-5 border-b border-border">
               <h2 className="text-xl font-semibold text-foreground">Recent Completions</h2>
               <p className="text-sm text-muted-foreground mt-1">Today&apos;s victories</p>
@@ -241,7 +241,7 @@ function QuestCard({ quest, lifeAreas, completed = false }: { quest: Quest; life
   };
 
   return (
-    <div className={`glass p-5 hover-lift ${
+    <div className={`card p-5 hover-lift ${
       isOverdue 
         ? 'border-red-300 bg-red-50' 
         : completed 
@@ -347,7 +347,7 @@ function QuestCard({ quest, lifeAreas, completed = false }: { quest: Quest; life
               (quest.totalSubtasks > 0 && quest.completedSubtasks < quest.totalSubtasks) ||
               (isRecurring && recurringProgress?.isCompleted)
             }
-            className="ml-4 bg-blue-500 hover:bg-blue-600 text-white font-medium px-4 py-2 rounded-xl"
+            className="ml-4 bg-primary hover:bg-primary/90 text-white font-medium px-4 py-2 rounded-lg"
           >
             {isRecurring && recurringProgress?.isCompleted ? '✓ Completed' : '✓ Complete'}
           </Button>

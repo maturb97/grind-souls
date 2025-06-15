@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useGameStore } from '@/store/useGameStore';
 import { Button } from '@/components/ui/Button';
-import { MobileNavigation, DesktopNavigation } from '@/components/ui/MobileNavigation';
+import { SimpleSidebar } from '@/components/ui/SimpleSidebar';
 import { Reward } from '@/types';
 
 interface RewardFormData {
@@ -57,23 +57,15 @@ export function RewardsManagement() {
   }
 
   return (
-    <div className="min-h-screen bg-background liquid-container">
-      {/* Liquid Background */}
-      <div className="liquid-bg"></div>
-      
-      {/* Navigation */}
-      <MobileNavigation 
+    <div className="min-h-screen bg-background flex">
+      {/* Sidebar */}
+      <SimpleSidebar 
         user={user}
-        onCreateAction={() => setShowCreateModal(true)}
-        createActionLabel="Create Reward"
-      />
-      <DesktopNavigation 
-        user={user}
-        onCreateAction={() => setShowCreateModal(true)}
-        createActionLabel="Create Reward"
+        onCreateQuest={() => setShowCreateModal(true)}
       />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Main Content */}
+      <div className="flex-1 p-6 md:p-8">
         {/* Create/Edit Reward Modal */}
         {(showCreateModal || editingReward) && (
           <RewardModal
@@ -97,26 +89,26 @@ export function RewardsManagement() {
 
         {/* Stats Overview */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="glass-card p-4 text-center card-hover animate-spring-in animate-float">
+          <div className="card p-4 text-center hover-lift">
             <div className="text-2xl font-bold text-foreground">{rewards.length}</div>
             <div className="text-xs text-muted-foreground font-medium">Total Rewards</div>
           </div>
-          <div className="glass-card p-4 text-center card-hover animate-spring-in animate-float" style={{ animationDelay: '0.1s' }}>
+          <div className="card p-4 text-center hover-lift">
             <div className="text-2xl font-bold text-primary">{availableRewards.length}</div>
             <div className="text-xs text-muted-foreground font-medium">Available</div>
           </div>
-          <div className="glass-card p-4 text-center card-hover animate-spring-in animate-float" style={{ animationDelay: '0.2s' }}>
+          <div className="card p-4 text-center hover-lift">
             <div className="text-2xl font-bold text-success">{purchasedRewards.length}</div>
             <div className="text-xs text-muted-foreground font-medium">Purchased</div>
           </div>
-          <div className="glass-card p-4 text-center card-hover animate-spring-in animate-float" style={{ animationDelay: '0.3s' }}>
+          <div className="card p-4 text-center hover-lift">
             <div className="text-2xl font-bold text-warning">{user?.totalCurrency || 0}</div>
             <div className="text-xs text-muted-foreground font-medium">Goldens Balance</div>
           </div>
         </div>
 
         {/* Filters */}
-        <div className="glass-card mb-8 animate-spring-in" style={{ animationDelay: '0.4s' }}>
+        <div className="card mb-8">
           <div className="px-6 py-5 border-b border-border">
             <h2 className="text-xl font-semibold text-foreground">Filters</h2>
           </div>
@@ -129,7 +121,7 @@ export function RewardsManagement() {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Search by name or description..."
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-foreground placeholder-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                 />
               </div>
               <div>
@@ -137,7 +129,7 @@ export function RewardsManagement() {
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                 >
                   <option value="">All Categories</option>
                   {categories.map(category => (
@@ -152,7 +144,7 @@ export function RewardsManagement() {
         </div>
 
         {/* Available Rewards */}
-        <div className="glass-card card-hover mb-8 animate-spring-in" style={{ animationDelay: '0.5s' }}>
+        <div className="card mb-8">
           <div className="px-6 py-5 border-b border-border">
             <h2 className="text-xl font-semibold text-foreground">Available Rewards</h2>
             <p className="text-sm text-muted-foreground mt-1">Spend your Goldens on these rewards</p>
@@ -187,7 +179,7 @@ export function RewardsManagement() {
 
         {/* Purchased Rewards */}
         {purchasedRewards.length > 0 && (
-          <div className="glass-card card-hover animate-spring-in" style={{ animationDelay: '0.6s' }}>
+          <div className="card">
             <div className="px-6 py-5 border-b border-border">
               <h2 className="text-xl font-semibold text-foreground">Purchase History</h2>
               <p className="text-sm text-muted-foreground mt-1">Your earned rewards</p>
@@ -212,7 +204,7 @@ export function RewardsManagement() {
             </div>
           </div>
         )}
-      </main>
+      </div>
     </div>
   );
 }

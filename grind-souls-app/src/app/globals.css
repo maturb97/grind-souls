@@ -1,46 +1,46 @@
 @import "tailwindcss";
 
 :root {
-  /* Apple Colors */
-  --primary: #007AFF;
+  /* Minimalist Colors */
+  --primary: #2563eb;
   --primary-foreground: #ffffff;
   
   /* Backgrounds */
-  --background: #f2f2f7;
-  --surface: rgba(255, 255, 255, 0.8);
-  --surface-elevated: rgba(255, 255, 255, 0.9);
+  --background: #ffffff;
+  --surface: #ffffff;
+  --surface-elevated: #f8fafc;
   
   /* Text */
-  --foreground: #1d1d1f;
-  --muted-foreground: #6d6d70;
-  --secondary-foreground: #424245;
+  --foreground: #0f172a;
+  --muted-foreground: #64748b;
+  --secondary-foreground: #475569;
   
   /* Borders */
-  --border: rgba(0, 0, 0, 0.1);
-  --border-light: rgba(0, 0, 0, 0.05);
+  --border: #e2e8f0;
+  --border-light: #f1f5f9;
   
   /* States */
-  --success: #30d158;
-  --warning: #ff9500;
-  --error: #ff3b30;
-  --info: #007AFF;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --info: #3b82f6;
 }
 
 .dark {
-  --background: #000000;
-  --surface: rgba(28, 28, 30, 0.9);
-  --surface-elevated: rgba(44, 44, 46, 0.9);
+  --background: #0f172a;
+  --surface: #1e293b;
+  --surface-elevated: #334155;
   
-  --foreground: #ffffff;
-  --muted-foreground: #98989d;
-  --secondary-foreground: #aeaeb2;
+  --foreground: #f8fafc;
+  --muted-foreground: #94a3b8;
+  --secondary-foreground: #cbd5e1;
   
-  --border: rgba(255, 255, 255, 0.1);
-  --border-light: rgba(255, 255, 255, 0.05);
+  --border: #334155;
+  --border-light: #475569;
 }
 
 @theme inline {
-  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   
   --color-background: var(--background);
   --color-surface: var(--surface);
@@ -71,34 +71,30 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Apple Glass Effect */
-.glass {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 16px;
+/* Minimalist Card */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 }
 
-.dark .glass {
-  background: rgba(28, 28, 30, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+.card-elevated {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
 
-/* Rounded corners */
-.rounded-xl { border-radius: 16px; }
-.rounded-2xl { border-radius: 20px; }
-.rounded-3xl { border-radius: 24px; }
-
-/* Simple hover effect only */
+/* Simple hover effect */
 .hover-lift:hover {
   transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
 
-/* NO complex animations - everything is instant */
+/* Clean transitions */
 * {
-  animation: none !important;
-  transition: all 0.15s ease !important;
+  transition: all 0.15s ease;
 }
 
 /* Focus */

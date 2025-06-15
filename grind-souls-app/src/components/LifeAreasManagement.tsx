@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useGameStore } from '@/store/useGameStore';
 import { Button } from '@/components/ui/Button';
-import { MobileNavigation, DesktopNavigation } from '@/components/ui/MobileNavigation';
+import { SimpleSidebar } from '@/components/ui/SimpleSidebar';
 import { LifeArea } from '@/types';
 
 interface LifeAreaFormData {
@@ -46,23 +46,15 @@ export function LifeAreasManagement() {
   }
 
   return (
-    <div className="min-h-screen bg-background liquid-container">
-      {/* Liquid Background */}
-      <div className="liquid-bg"></div>
-      
-      {/* Navigation */}
-      <MobileNavigation 
+    <div className="min-h-screen bg-background flex">
+      {/* Sidebar */}
+      <SimpleSidebar 
         user={user}
-        onCreateAction={() => setShowCreateModal(true)}
-        createActionLabel="Create Life Area"
-      />
-      <DesktopNavigation 
-        user={user}
-        onCreateAction={() => setShowCreateModal(true)}
-        createActionLabel="Create Life Area"
+        onCreateQuest={() => setShowCreateModal(true)}
       />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Main Content */}
+      <div className="flex-1 p-6 md:p-8">
         {/* Create/Edit Life Area Modal */}
         {(showCreateModal || editingLifeArea) && (
           <LifeAreaModal
@@ -85,26 +77,26 @@ export function LifeAreasManagement() {
 
         {/* Stats Overview */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="glass-card p-4 text-center card-hover animate-spring-in animate-float">
+          <div className="card p-4 text-center hover-lift">
             <div className="text-2xl font-bold text-foreground">{lifeAreas.length}</div>
             <div className="text-xs text-muted-foreground font-medium">Total Areas</div>
           </div>
-          <div className="glass-card p-4 text-center card-hover animate-spring-in animate-float" style={{ animationDelay: '0.1s' }}>
+          <div className="card p-4 text-center hover-lift">
             <div className="text-2xl font-bold text-success">{activeLifeAreas.length}</div>
             <div className="text-xs text-muted-foreground font-medium">Active Areas</div>
           </div>
-          <div className="glass-card p-4 text-center card-hover animate-spring-in animate-float" style={{ animationDelay: '0.2s' }}>
+          <div className="card p-4 text-center hover-lift">
             <div className="text-2xl font-bold text-muted-foreground">{inactiveLifeAreas.length}</div>
             <div className="text-xs text-muted-foreground font-medium">Inactive Areas</div>
           </div>
-          <div className="glass-card p-4 text-center card-hover animate-spring-in animate-float" style={{ animationDelay: '0.3s' }}>
+          <div className="card p-4 text-center hover-lift">
             <div className="text-2xl font-bold text-info">{Math.max(...lifeAreas.map(a => a.level))}</div>
             <div className="text-xs text-muted-foreground font-medium">Highest Level</div>
           </div>
         </div>
 
         {/* Active Life Areas */}
-        <div className="glass-card card-hover mb-8 animate-spring-in" style={{ animationDelay: '0.4s' }}>
+        <div className="card card-hover mb-8 ">
           <div className="px-6 py-5 border-b border-border">
             <h2 className="text-xl font-semibold text-foreground">Active Life Areas</h2>
             <p className="text-sm text-muted-foreground mt-1">Areas you&apos;re currently focusing on for quests</p>
@@ -145,7 +137,7 @@ export function LifeAreasManagement() {
 
         {/* Inactive Life Areas */}
         {inactiveLifeAreas.length > 0 && (
-          <div className="glass-card card-hover animate-spring-in" style={{ animationDelay: '0.5s' }}>
+          <div className="card card-hover ">
             <div className="px-6 py-5 border-b border-border">
               <h2 className="text-xl font-semibold text-foreground">Inactive Life Areas</h2>
               <p className="text-sm text-muted-foreground mt-1">Areas you can reactivate when needed</p>
@@ -176,7 +168,7 @@ export function LifeAreasManagement() {
             </div>
           </div>
         )}
-      </main>
+      </div>
     </div>
   );
 }
