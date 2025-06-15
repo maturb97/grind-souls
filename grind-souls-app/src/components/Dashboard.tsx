@@ -1,17 +1,15 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useGameStore } from '@/store/useGameStore';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { Button } from '@/components/ui/Button';
-import { ThemeToggle } from '@/components/ui/ThemeToggle';
+import { MobileNavigation, DesktopNavigation } from '@/components/ui/MobileNavigation';
 import { QuestCreateModal } from '@/components/QuestCreateModal';
 import { Quest, LifeArea } from '@/types';
 import { getRecurringQuestProgress, formatRecurringDescription } from '@/lib/recurringUtils';
 
 export function Dashboard() {
-  const router = useRouter();
   const { 
     user, 
     lifeAreas, 
@@ -49,63 +47,21 @@ export function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="bg-surface border-b border-border backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-6">
-              <h1 className="text-3xl font-bold text-foreground tracking-tight">⚔️ Grind Souls</h1>
-              {user && (
-                <div className="flex items-center space-x-6 text-sm">
-                  <div className="flex items-center space-x-2 bg-surface-elevated px-3 py-2 rounded-full border border-border">
-                    <span className="text-primary text-lg">⚡</span>
-                    <span className="font-semibold text-foreground">{user.totalXP.toLocaleString()}</span>
-                    <span className="text-muted-foreground">XP</span>
-                  </div>
-                  <div className="flex items-center space-x-2 bg-surface-elevated px-3 py-2 rounded-full border border-border">
-                    <span className="text-warning text-lg">💰</span>
-                    <span className="font-semibold text-foreground">{user.totalCurrency.toLocaleString()}</span>
-                    <span className="text-muted-foreground">Goldens</span>
-                  </div>
-                </div>
-              )}
-            </div>
-            <div className="flex items-center space-x-3">
-              <ThemeToggle />
-              <div className="flex space-x-3">
-                <Button
-                  onClick={() => router.push('/quests')}
-                  variant="outline"
-                  className="px-4 py-2.5 font-medium"
-                >
-                  📋 Manage Quests
-                </Button>
-                <Button
-                  onClick={() => router.push('/rewards')}
-                  variant="outline"
-                  className="px-4 py-2.5 font-medium"
-                >
-                  🏆 Rewards
-                </Button>
-                <Button
-                  onClick={() => router.push('/life-areas')}
-                  variant="outline"
-                  className="px-4 py-2.5 font-medium"
-                >
-                  🎯 Life Areas
-                </Button>
-                <Button 
-                  onClick={() => setShowCreateModal(true)}
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2.5 font-semibold shadow-md hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5"
-                >
-                  ✨ Create Quest
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-background liquid-container">
+      {/* Liquid Background */}
+      <div className="liquid-bg"></div>
+      
+      {/* Navigation */}
+      <MobileNavigation 
+        user={user}
+        onCreateAction={() => setShowCreateModal(true)}
+        createActionLabel="Create Quest"
+      />
+      <DesktopNavigation 
+        user={user}
+        onCreateAction={() => setShowCreateModal(true)}
+        createActionLabel="Create Quest"
+      />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Quest Creation Modal */}
@@ -116,7 +72,7 @@ export function Dashboard() {
 
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="card p-6 hover:scale-105 transition-transform duration-200 animate-fade-in">
+          <div className="glass-card p-6 card-hover animate-spring-in animate-float">
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
@@ -130,7 +86,7 @@ export function Dashboard() {
             </div>
           </div>
 
-          <div className="card p-6 hover:scale-105 transition-transform duration-200 animate-fade-in">
+          <div className="glass-card p-6 card-hover animate-spring-in animate-float" style={{ animationDelay: '0.1s' }}>
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <div className="w-12 h-12 bg-success/10 rounded-xl flex items-center justify-center">
@@ -144,7 +100,7 @@ export function Dashboard() {
             </div>
           </div>
 
-          <div className="card p-6 hover:scale-105 transition-transform duration-200 animate-fade-in">
+          <div className="glass-card p-6 card-hover animate-spring-in animate-float" style={{ animationDelay: '0.2s' }}>
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <div className="w-12 h-12 bg-error/10 rounded-xl flex items-center justify-center">
@@ -158,7 +114,7 @@ export function Dashboard() {
             </div>
           </div>
 
-          <div className="card p-6 hover:scale-105 transition-transform duration-200 animate-fade-in">
+          <div className="glass-card p-6 card-hover animate-spring-in animate-float" style={{ animationDelay: '0.3s' }}>
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <div className="w-12 h-12 bg-info/10 rounded-xl flex items-center justify-center">
@@ -174,7 +130,7 @@ export function Dashboard() {
         </div>
 
         {/* Life Areas Progress */}
-        <div className="card mb-8 animate-fade-in">
+        <div className="glass-card mb-8 animate-spring-in" style={{ animationDelay: '0.4s' }}>
           <div className="px-6 py-5 border-b border-border">
             <h2 className="text-xl font-semibold text-foreground">Life Areas Progress</h2>
             <p className="text-sm text-muted-foreground mt-1">Level up your character stats by completing quests</p>
@@ -231,7 +187,7 @@ export function Dashboard() {
         {/* Recent Quests */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Active Quests */}
-          <div className="card animate-fade-in">
+          <div className="glass-card card-hover animate-spring-in" style={{ animationDelay: '0.5s' }}>
             <div className="px-6 py-5 border-b border-border">
               <h2 className="text-xl font-semibold text-foreground">Active Quests</h2>
               <p className="text-sm text-muted-foreground mt-1">Your current adventures</p>
@@ -261,7 +217,7 @@ export function Dashboard() {
           </div>
 
           {/* Recent Completions */}
-          <div className="card animate-fade-in">
+          <div className="glass-card card-hover animate-spring-in" style={{ animationDelay: '0.6s' }}>
             <div className="px-6 py-5 border-b border-border">
               <h2 className="text-xl font-semibold text-foreground">Recent Completions</h2>
               <p className="text-sm text-muted-foreground mt-1">Today&apos;s victories</p>

@@ -1,10 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useGameStore } from '@/store/useGameStore';
 import { Button } from '@/components/ui/Button';
-import { ThemeToggle } from '@/components/ui/ThemeToggle';
+import { MobileNavigation, DesktopNavigation } from '@/components/ui/MobileNavigation';
 import { LifeArea } from '@/types';
 
 interface LifeAreaFormData {
@@ -15,7 +14,6 @@ interface LifeAreaFormData {
 }
 
 export function LifeAreasManagement() {
-  const router = useRouter();
   const { 
     user,
     lifeAreas, 
@@ -48,63 +46,21 @@ export function LifeAreasManagement() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="bg-surface border-b border-border backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-6">
-              <h1 className="text-3xl font-bold text-foreground tracking-tight">🎯 Life Areas</h1>
-              {user && (
-                <div className="flex items-center space-x-6 text-sm">
-                  <div className="flex items-center space-x-2 bg-surface-elevated px-3 py-2 rounded-full border border-border">
-                    <span className="text-primary text-lg">⚡</span>
-                    <span className="font-semibold text-foreground">{user.totalXP.toLocaleString()}</span>
-                    <span className="text-muted-foreground">XP</span>
-                  </div>
-                  <div className="flex items-center space-x-2 bg-surface-elevated px-3 py-2 rounded-full border border-border">
-                    <span className="text-warning text-lg">💰</span>
-                    <span className="font-semibold text-foreground">{user.totalCurrency.toLocaleString()}</span>
-                    <span className="text-muted-foreground">Goldens</span>
-                  </div>
-                </div>
-              )}
-            </div>
-            <div className="flex items-center space-x-3">
-              <ThemeToggle />
-              <div className="flex space-x-3">
-                <Button
-                  onClick={() => router.push('/')}
-                  variant="outline"
-                  className="px-4 py-2"
-                >
-                  🏠 Dashboard
-                </Button>
-                <Button
-                  onClick={() => router.push('/quests')}
-                  variant="outline"
-                  className="px-4 py-2"
-                >
-                  📋 Quests
-                </Button>
-                <Button
-                  onClick={() => router.push('/rewards')}
-                  variant="outline"
-                  className="px-4 py-2"
-                >
-                  🏆 Rewards
-                </Button>
-                <Button 
-                  onClick={() => setShowCreateModal(true)}
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2.5 font-semibold shadow-md hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5"
-                >
-                  ✨ Create Life Area
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-background liquid-container">
+      {/* Liquid Background */}
+      <div className="liquid-bg"></div>
+      
+      {/* Navigation */}
+      <MobileNavigation 
+        user={user}
+        onCreateAction={() => setShowCreateModal(true)}
+        createActionLabel="Create Life Area"
+      />
+      <DesktopNavigation 
+        user={user}
+        onCreateAction={() => setShowCreateModal(true)}
+        createActionLabel="Create Life Area"
+      />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Create/Edit Life Area Modal */}
@@ -129,26 +85,26 @@ export function LifeAreasManagement() {
 
         {/* Stats Overview */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="card p-4 text-center hover:scale-105 transition-transform duration-200 animate-fade-in">
+          <div className="glass-card p-4 text-center card-hover animate-spring-in animate-float">
             <div className="text-2xl font-bold text-foreground">{lifeAreas.length}</div>
             <div className="text-xs text-muted-foreground font-medium">Total Areas</div>
           </div>
-          <div className="card p-4 text-center hover:scale-105 transition-transform duration-200 animate-fade-in">
+          <div className="glass-card p-4 text-center card-hover animate-spring-in animate-float" style={{ animationDelay: '0.1s' }}>
             <div className="text-2xl font-bold text-success">{activeLifeAreas.length}</div>
             <div className="text-xs text-muted-foreground font-medium">Active Areas</div>
           </div>
-          <div className="card p-4 text-center hover:scale-105 transition-transform duration-200 animate-fade-in">
+          <div className="glass-card p-4 text-center card-hover animate-spring-in animate-float" style={{ animationDelay: '0.2s' }}>
             <div className="text-2xl font-bold text-muted-foreground">{inactiveLifeAreas.length}</div>
             <div className="text-xs text-muted-foreground font-medium">Inactive Areas</div>
           </div>
-          <div className="card p-4 text-center hover:scale-105 transition-transform duration-200 animate-fade-in">
+          <div className="glass-card p-4 text-center card-hover animate-spring-in animate-float" style={{ animationDelay: '0.3s' }}>
             <div className="text-2xl font-bold text-info">{Math.max(...lifeAreas.map(a => a.level))}</div>
             <div className="text-xs text-muted-foreground font-medium">Highest Level</div>
           </div>
         </div>
 
         {/* Active Life Areas */}
-        <div className="card mb-8 animate-fade-in">
+        <div className="glass-card card-hover mb-8 animate-spring-in" style={{ animationDelay: '0.4s' }}>
           <div className="px-6 py-5 border-b border-border">
             <h2 className="text-xl font-semibold text-foreground">Active Life Areas</h2>
             <p className="text-sm text-muted-foreground mt-1">Areas you&apos;re currently focusing on for quests</p>
@@ -189,7 +145,7 @@ export function LifeAreasManagement() {
 
         {/* Inactive Life Areas */}
         {inactiveLifeAreas.length > 0 && (
-          <div className="card animate-fade-in">
+          <div className="glass-card card-hover animate-spring-in" style={{ animationDelay: '0.5s' }}>
             <div className="px-6 py-5 border-b border-border">
               <h2 className="text-xl font-semibold text-foreground">Inactive Life Areas</h2>
               <p className="text-sm text-muted-foreground mt-1">Areas you can reactivate when needed</p>

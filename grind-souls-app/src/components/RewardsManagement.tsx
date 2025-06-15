@@ -1,10 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useGameStore } from '@/store/useGameStore';
 import { Button } from '@/components/ui/Button';
-import { ThemeToggle } from '@/components/ui/ThemeToggle';
+import { MobileNavigation, DesktopNavigation } from '@/components/ui/MobileNavigation';
 import { Reward } from '@/types';
 
 interface RewardFormData {
@@ -15,7 +14,6 @@ interface RewardFormData {
 }
 
 export function RewardsManagement() {
-  const router = useRouter();
   const { 
     user,
     rewards, 
@@ -59,58 +57,21 @@ export function RewardsManagement() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="bg-surface border-b border-border backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-6">
-              <h1 className="text-3xl font-bold text-foreground tracking-tight">🏆 Rewards Store</h1>
-              {user && (
-                <div className="flex items-center space-x-6 text-sm">
-                  <div className="flex items-center space-x-2 bg-surface-elevated px-4 py-2 rounded-full border border-border">
-                    <span className="text-warning text-lg">💰</span>
-                    <span className="font-semibold text-foreground text-lg">{user.totalCurrency.toLocaleString()}</span>
-                    <span className="text-muted-foreground">Goldens</span>
-                  </div>
-                </div>
-              )}
-            </div>
-            <div className="flex items-center space-x-3">
-              <ThemeToggle />
-              <div className="flex space-x-3">
-                <Button
-                  onClick={() => router.push('/')}
-                  variant="outline"
-                  className="px-4 py-2"
-                >
-                  🏠 Dashboard
-                </Button>
-                <Button
-                  onClick={() => router.push('/quests')}
-                  variant="outline"
-                  className="px-4 py-2"
-                >
-                  📋 Quests
-                </Button>
-                <Button
-                  onClick={() => router.push('/life-areas')}
-                  variant="outline"
-                  className="px-4 py-2"
-                >
-                  🎯 Life Areas
-                </Button>
-                <Button 
-                  onClick={() => setShowCreateModal(true)}
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2.5 font-semibold shadow-md hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5"
-                >
-                  ✨ Create Reward
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-background liquid-container">
+      {/* Liquid Background */}
+      <div className="liquid-bg"></div>
+      
+      {/* Navigation */}
+      <MobileNavigation 
+        user={user}
+        onCreateAction={() => setShowCreateModal(true)}
+        createActionLabel="Create Reward"
+      />
+      <DesktopNavigation 
+        user={user}
+        onCreateAction={() => setShowCreateModal(true)}
+        createActionLabel="Create Reward"
+      />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Create/Edit Reward Modal */}
@@ -136,26 +97,26 @@ export function RewardsManagement() {
 
         {/* Stats Overview */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="card p-4 text-center hover:scale-105 transition-transform duration-200 animate-fade-in">
+          <div className="glass-card p-4 text-center card-hover animate-spring-in animate-float">
             <div className="text-2xl font-bold text-foreground">{rewards.length}</div>
             <div className="text-xs text-muted-foreground font-medium">Total Rewards</div>
           </div>
-          <div className="card p-4 text-center hover:scale-105 transition-transform duration-200 animate-fade-in">
+          <div className="glass-card p-4 text-center card-hover animate-spring-in animate-float" style={{ animationDelay: '0.1s' }}>
             <div className="text-2xl font-bold text-primary">{availableRewards.length}</div>
             <div className="text-xs text-muted-foreground font-medium">Available</div>
           </div>
-          <div className="card p-4 text-center hover:scale-105 transition-transform duration-200 animate-fade-in">
+          <div className="glass-card p-4 text-center card-hover animate-spring-in animate-float" style={{ animationDelay: '0.2s' }}>
             <div className="text-2xl font-bold text-success">{purchasedRewards.length}</div>
             <div className="text-xs text-muted-foreground font-medium">Purchased</div>
           </div>
-          <div className="card p-4 text-center hover:scale-105 transition-transform duration-200 animate-fade-in">
+          <div className="glass-card p-4 text-center card-hover animate-spring-in animate-float" style={{ animationDelay: '0.3s' }}>
             <div className="text-2xl font-bold text-warning">{user?.totalCurrency || 0}</div>
             <div className="text-xs text-muted-foreground font-medium">Goldens Balance</div>
           </div>
         </div>
 
         {/* Filters */}
-        <div className="card mb-8 animate-fade-in">
+        <div className="glass-card mb-8 animate-spring-in" style={{ animationDelay: '0.4s' }}>
           <div className="px-6 py-5 border-b border-border">
             <h2 className="text-xl font-semibold text-foreground">Filters</h2>
           </div>
@@ -191,7 +152,7 @@ export function RewardsManagement() {
         </div>
 
         {/* Available Rewards */}
-        <div className="card mb-8 animate-fade-in">
+        <div className="glass-card card-hover mb-8 animate-spring-in" style={{ animationDelay: '0.5s' }}>
           <div className="px-6 py-5 border-b border-border">
             <h2 className="text-xl font-semibold text-foreground">Available Rewards</h2>
             <p className="text-sm text-muted-foreground mt-1">Spend your Goldens on these rewards</p>
@@ -226,7 +187,7 @@ export function RewardsManagement() {
 
         {/* Purchased Rewards */}
         {purchasedRewards.length > 0 && (
-          <div className="card animate-fade-in">
+          <div className="glass-card card-hover animate-spring-in" style={{ animationDelay: '0.6s' }}>
             <div className="px-6 py-5 border-b border-border">
               <h2 className="text-xl font-semibold text-foreground">Purchase History</h2>
               <p className="text-sm text-muted-foreground mt-1">Your earned rewards</p>
