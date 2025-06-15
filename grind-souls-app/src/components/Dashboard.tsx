@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useGameStore } from '@/store/useGameStore';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { Button } from '@/components/ui/Button';
-import { MobileNavigation, DesktopNavigation } from '@/components/ui/MobileNavigation';
+import { SimpleSidebar } from '@/components/ui/SimpleSidebar';
 import { QuestCreateModal } from '@/components/QuestCreateModal';
 import { Quest, LifeArea } from '@/types';
 import { getRecurringQuestProgress, formatRecurringDescription } from '@/lib/recurringUtils';
@@ -38,7 +38,7 @@ export function Dashboard() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center animate-fade-in">
+        <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-muted-foreground font-medium">Loading your adventure...</p>
         </div>
@@ -47,23 +47,15 @@ export function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-background liquid-container">
-      {/* Liquid Background */}
-      <div className="liquid-bg"></div>
+    <div className="min-h-screen bg-background flex">
+      {/* Sidebar */}
+      <SimpleSidebar 
+        user={user}
+        onCreateQuest={() => setShowCreateModal(true)}
+      />
       
-      {/* Navigation */}
-      <MobileNavigation 
-        user={user}
-        onCreateAction={() => setShowCreateModal(true)}
-        createActionLabel="Create Quest"
-      />
-      <DesktopNavigation 
-        user={user}
-        onCreateAction={() => setShowCreateModal(true)}
-        createActionLabel="Create Quest"
-      />
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Main Content */}
+      <div className="flex-1 p-6 md:p-8">
         {/* Quest Creation Modal */}
         <QuestCreateModal 
           isOpen={showCreateModal} 
@@ -72,12 +64,10 @@ export function Dashboard() {
 
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="glass-card p-6 card-hover animate-spring-in animate-float">
+          <div className="glass p-6 hover-lift">
             <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
-                  <span className="text-primary text-xl">📋</span>
-                </div>
+              <div className="w-12 h-12 bg-blue-500/10 rounded-2xl flex items-center justify-center">
+                <span className="text-blue-500 text-xl">📋</span>
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-muted-foreground">Active Quests</p>
@@ -86,12 +76,10 @@ export function Dashboard() {
             </div>
           </div>
 
-          <div className="glass-card p-6 card-hover animate-spring-in animate-float" style={{ animationDelay: '0.1s' }}>
+          <div className="glass p-6 hover-lift">
             <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <div className="w-12 h-12 bg-success/10 rounded-xl flex items-center justify-center">
-                  <span className="text-success text-xl">✅</span>
-                </div>
+              <div className="w-12 h-12 bg-green-500/10 rounded-2xl flex items-center justify-center">
+                <span className="text-green-500 text-xl">✅</span>
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-muted-foreground">Completed Today</p>
@@ -100,12 +88,10 @@ export function Dashboard() {
             </div>
           </div>
 
-          <div className="glass-card p-6 card-hover animate-spring-in animate-float" style={{ animationDelay: '0.2s' }}>
+          <div className="glass p-6 hover-lift">
             <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <div className="w-12 h-12 bg-error/10 rounded-xl flex items-center justify-center">
-                  <span className="text-error text-xl">⚠️</span>
-                </div>
+              <div className="w-12 h-12 bg-red-500/10 rounded-2xl flex items-center justify-center">
+                <span className="text-red-500 text-xl">⚠️</span>
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-muted-foreground">Overdue</p>
@@ -114,12 +100,10 @@ export function Dashboard() {
             </div>
           </div>
 
-          <div className="glass-card p-6 card-hover animate-spring-in animate-float" style={{ animationDelay: '0.3s' }}>
+          <div className="glass p-6 hover-lift">
             <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <div className="w-12 h-12 bg-info/10 rounded-xl flex items-center justify-center">
-                  <span className="text-info text-xl">🎯</span>
-                </div>
+              <div className="w-12 h-12 bg-purple-500/10 rounded-2xl flex items-center justify-center">
+                <span className="text-purple-500 text-xl">🎯</span>
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-muted-foreground">Life Areas</p>
@@ -130,7 +114,7 @@ export function Dashboard() {
         </div>
 
         {/* Life Areas Progress */}
-        <div className="glass-card mb-8 animate-spring-in" style={{ animationDelay: '0.4s' }}>
+        <div className="glass mb-8">
           <div className="px-6 py-5 border-b border-border">
             <h2 className="text-xl font-semibold text-foreground">Life Areas Progress</h2>
             <p className="text-sm text-muted-foreground mt-1">Level up your character stats by completing quests</p>
@@ -140,42 +124,39 @@ export function Dashboard() {
               {lifeAreas.map((lifeArea) => {
                 const progress = calculateLevelProgress(lifeArea.id);
                 return (
-                  <div key={lifeArea.id} className="group relative">
-                    <div className="space-y-4 p-4 rounded-xl border border-border hover:border-border-light transition-all duration-200 hover:shadow-md">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                          <span className="text-3xl drop-shadow-sm">{lifeArea.icon}</span>
-                          <div>
-                            <h3 className="font-semibold text-foreground">{lifeArea.name}</h3>
-                            <p className="text-sm text-muted-foreground font-medium">Level {lifeArea.level}</p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-sm font-semibold text-foreground">{lifeArea.totalXP.toLocaleString()} XP</p>
-                          <p className="text-xs text-muted-foreground">Total earned</p>
+                  <div key={lifeArea.id} className="glass p-4 hover-lift">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center space-x-3">
+                        <span className="text-3xl">{lifeArea.icon}</span>
+                        <div>
+                          <h3 className="font-semibold text-foreground">{lifeArea.name}</h3>
+                          <p className="text-sm text-muted-foreground">Level {lifeArea.level}</p>
                         </div>
                       </div>
-                      
-                      <div className="space-y-2">
-                        <div className="flex justify-between items-center text-xs">
-                          <span className="text-muted-foreground">Progress to Level {lifeArea.level + 1}</span>
-                          <span className="font-medium text-foreground">{Math.round(progress.percentage)}%</span>
-                        </div>
-                        <ProgressBar
-                          current={progress.current}
-                          max={progress.required}
-                          color={lifeArea.color}
-                          showText={false}
-                          animated={true}
-                        />
+                      <div className="text-right">
+                        <p className="text-sm font-semibold text-foreground">{lifeArea.totalXP.toLocaleString()} XP</p>
+                        <p className="text-xs text-muted-foreground">Total earned</p>
                       </div>
-                      
-                      {/* Always visible description */}
-                      <div className="mt-3">
-                        <p className="text-xs text-muted-foreground leading-relaxed p-3 bg-surface-elevated rounded-lg border border-border-light">
-                          {lifeArea.description}
-                        </p>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="text-muted-foreground">Progress to Level {lifeArea.level + 1}</span>
+                        <span className="font-medium text-foreground">{Math.round(progress.percentage)}%</span>
                       </div>
+                      <ProgressBar
+                        current={progress.current}
+                        max={progress.required}
+                        color={lifeArea.color}
+                        showText={false}
+                        animated={false}
+                      />
+                    </div>
+                    
+                    <div className="mt-3">
+                      <p className="text-xs text-muted-foreground p-3 bg-white/30 rounded-xl border border-gray-200/30">
+                        {lifeArea.description}
+                      </p>
                     </div>
                   </div>
                 );
@@ -187,7 +168,7 @@ export function Dashboard() {
         {/* Recent Quests */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Active Quests */}
-          <div className="glass-card card-hover animate-spring-in" style={{ animationDelay: '0.5s' }}>
+          <div className="glass">
             <div className="px-6 py-5 border-b border-border">
               <h2 className="text-xl font-semibold text-foreground">Active Quests</h2>
               <p className="text-sm text-muted-foreground mt-1">Your current adventures</p>
@@ -217,7 +198,7 @@ export function Dashboard() {
           </div>
 
           {/* Recent Completions */}
-          <div className="glass-card card-hover animate-spring-in" style={{ animationDelay: '0.6s' }}>
+          <div className="glass">
             <div className="px-6 py-5 border-b border-border">
               <h2 className="text-xl font-semibold text-foreground">Recent Completions</h2>
               <p className="text-sm text-muted-foreground mt-1">Today&apos;s victories</p>
@@ -239,7 +220,7 @@ export function Dashboard() {
             </div>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }
@@ -252,20 +233,20 @@ function QuestCard({ quest, lifeAreas, completed = false }: { quest: Quest; life
   const recurringProgress = isRecurring ? getRecurringQuestProgress(quest) : null;
 
   const difficultyColors = {
-    trivial: 'bg-surface-elevated text-muted-foreground border border-border',
-    easy: 'bg-success/10 text-success border border-success/20',
-    medium: 'bg-warning/10 text-warning border border-warning/20',
-    hard: 'bg-error/10 text-error border border-error/20',
-    impossible: 'bg-primary/10 text-primary border border-primary/20'
+    trivial: 'bg-gray-100 text-gray-600 border border-gray-200',
+    easy: 'bg-green-100 text-green-600 border border-green-200',
+    medium: 'bg-yellow-100 text-yellow-600 border border-yellow-200',
+    hard: 'bg-red-100 text-red-600 border border-red-200',
+    impossible: 'bg-purple-100 text-purple-600 border border-purple-200'
   };
 
   return (
-    <div className={`rounded-xl p-5 border transition-all duration-200 hover:shadow-md ${
+    <div className={`glass p-5 hover-lift ${
       isOverdue 
-        ? 'border-error/30 bg-error/5' 
+        ? 'border-red-300 bg-red-50' 
         : completed 
-          ? 'border-border bg-surface opacity-80' 
-          : 'border-border bg-surface hover:border-border-light'
+          ? 'opacity-80' 
+          : ''
     }`}>
       <div className="flex items-start justify-between">
         <div className="flex-1">
@@ -279,28 +260,26 @@ function QuestCard({ quest, lifeAreas, completed = false }: { quest: Quest; life
               {quest.title}
             </h3>
             {quest.priority === 'high' && (
-              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-error/10 text-error border border-error/20">
+              <span className="px-2 py-1 bg-red-100 text-red-600 text-xs rounded-xl border border-red-200">
                 High Priority
               </span>
             )}
           </div>
           
           <div className="flex items-center gap-3 text-xs mb-3">
-            <span className={`inline-flex items-center px-2.5 py-1 rounded-full font-medium ${difficultyColors[quest.difficulty]}`}>
+            <span className={`px-2.5 py-1 rounded-xl font-medium ${difficultyColors[quest.difficulty]}`}>
               {quest.difficulty}
             </span>
             <div className="flex items-center space-x-1">
-              <span className="text-primary">⚡</span>
-              <span className="font-medium text-foreground">{quest.xpReward}</span>
-              <span className="text-muted-foreground">XP</span>
+              <span className="text-blue-500">⚡</span>
+              <span className="font-medium">{quest.xpReward} XP</span>
             </div>
             <div className="flex items-center space-x-1">
-              <span className="text-warning">💰</span>
-              <span className="font-medium text-foreground">{quest.currencyReward}</span>
-              <span className="text-muted-foreground">Souls</span>
+              <span className="text-yellow-500">💰</span>
+              <span className="font-medium">{quest.currencyReward} Goldens</span>
             </div>
             {quest.wasRareQuest && (
-              <span className="text-warning flex items-center space-x-1">
+              <span className="text-yellow-500 flex items-center space-x-1">
                 <span>⭐</span>
                 <span className="font-medium">Rare!</span>
               </span>
@@ -312,9 +291,9 @@ function QuestCard({ quest, lifeAreas, completed = false }: { quest: Quest; life
               <ProgressBar
                 current={quest.completedSubtasks}
                 max={quest.totalSubtasks}
-                color="#6366f1"
+                color="#007AFF"
                 showText={true}
-                animated={true}
+                animated={false}
               />
             </div>
           )}
@@ -332,12 +311,12 @@ function QuestCard({ quest, lifeAreas, completed = false }: { quest: Quest; life
               <ProgressBar
                 current={recurringProgress.completed}
                 max={recurringProgress.target}
-                color={recurringProgress.isCompleted ? "#10b981" : "#6366f1"}
+                color={recurringProgress.isCompleted ? "#30d158" : "#007AFF"}
                 showText={true}
-                animated={true}
+                animated={false}
               />
               {quest.recurrence!.streak > 0 && (
-                <div className="flex items-center mt-1 text-xs text-warning">
+                <div className="flex items-center mt-1 text-xs text-yellow-500">
                   🔥 {quest.recurrence!.streak} streak
                 </div>
               )}
@@ -345,8 +324,8 @@ function QuestCard({ quest, lifeAreas, completed = false }: { quest: Quest; life
           )}
 
           {isOverdue && (
-            <div className="mt-3 p-2 bg-error/10 border border-error/20 rounded-lg">
-              <p className="text-error text-xs font-medium flex items-center space-x-1">
+            <div className="mt-3 p-2 bg-red-100 border border-red-200 rounded-xl">
+              <p className="text-red-600 text-xs font-medium flex items-center space-x-1">
                 <span>⚠️</span>
                 <span>Overdue since {new Date(quest.dueDate!).toLocaleDateString()}</span>
               </p>
@@ -368,7 +347,7 @@ function QuestCard({ quest, lifeAreas, completed = false }: { quest: Quest; life
               (quest.totalSubtasks > 0 && quest.completedSubtasks < quest.totalSubtasks) ||
               (isRecurring && recurringProgress?.isCompleted)
             }
-            className="ml-4 bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-4 py-2 shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-0.5"
+            className="ml-4 bg-blue-500 hover:bg-blue-600 text-white font-medium px-4 py-2 rounded-xl"
           >
             {isRecurring && recurringProgress?.isCompleted ? '✓ Completed' : '✓ Complete'}
           </Button>
