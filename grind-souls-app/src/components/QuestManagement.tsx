@@ -7,7 +7,8 @@ import { Button } from '@/components/ui/Button';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { QuestCreateModal } from '@/components/QuestCreateModal';
-import { Quest, LifeArea } from '@/types';
+import { SubtaskManagement } from '@/components/SubtaskManagement';
+import { Quest, LifeArea, Subtask } from '@/types';
 import { Difficulty, Priority } from '@/config/gameConfig';
 import { getRecurringQuestProgress, formatRecurringDescription } from '@/lib/recurringUtils';
 
@@ -20,6 +21,7 @@ export function QuestManagement() {
     user,
     lifeAreas, 
     quests, 
+    subtasks,
     isLoading,
     initializeApp,
     completeQuest,
@@ -29,6 +31,7 @@ export function QuestManagement() {
   } = useGameStore();
 
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [selectedQuest, setSelectedQuest] = useState<Quest | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<FilterType>('all');
   const [sortType, setSortType] = useState<SortType>('newest');
@@ -207,6 +210,16 @@ export function QuestManagement() {
           onClose={() => setShowCreateModal(false)} 
         />
 
+        {/* Quest Details Modal */}
+        {selectedQuest && (
+          <QuestDetailsModal
+            quest={selectedQuest}
+            subtasks={subtasks}
+            lifeAreas={lifeAreas}
+            onClose={() => setSelectedQuest(null)}
+          />
+        )}
+
         {/* Stats Overview */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
           <div className="card p-4 text-center hover:scale-105 transition-transform duration-200 animate-fade-in">
@@ -382,6 +395,7 @@ export function QuestManagement() {
                     }
                   }}
                   onDelete={deleteQuest}
+                  onViewDetails={(quest) => setSelectedQuest(quest)}
                 />
               ))
             )}
@@ -396,12 +410,14 @@ function QuestRow({
   quest, 
   lifeAreas, 
   onComplete, 
-  onDelete 
+  onDelete,
+  onViewDetails
 }: { 
   quest: Quest; 
   lifeAreas: LifeArea[];
   onComplete: (questId: string) => void;
   onDelete: (questId: string) => void;
+  onViewDetails: (quest: Quest) => void;
 }) {
   const lifeArea = lifeAreas.find(la => la.id === quest.lifeAreaId);
   const isOverdue = quest.dueDate && new Date(quest.dueDate) < new Date() && !quest.isCompleted;
@@ -533,6 +549,14 @@ function QuestRow({
         </div>
 
         <div className="flex space-x-2 ml-4">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => onViewDetails(quest)}
+            className="px-3 py-2"
+          >
+            📋 Details
+          </Button>
           {!isCompleted && (
             <Button
               size="sm"
@@ -558,6 +582,163 @@ function QuestRow({
           >
             🗑️ Delete
           </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function QuestDetailsModal({
+  quest,
+  subtasks,
+  lifeAreas,
+  onClose
+}: {
+  quest: Quest;
+  subtasks: Subtask[];
+  lifeAreas: LifeArea[];
+  onClose: () => void;
+}) {
+  const lifeArea = lifeAreas.find(la => la.id === quest.lifeAreaId);
+  const isRecurring = !!quest.recurrence;
+  const recurringProgress = isRecurring ? getRecurringQuestProgress(quest) : null;
+
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
+  const difficultyColors = {
+    trivial: 'bg-surface-elevated text-muted-foreground border border-border',
+    easy: 'bg-success/10 text-success border border-success/20',
+    medium: 'bg-warning/10 text-warning border border-warning/20',
+    hard: 'bg-error/10 text-error border border-error/20',
+    impossible: 'bg-primary/10 text-primary border border-primary/20'
+  };
+
+  return (
+    <div 
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+      onClick={handleBackdropClick}
+    >
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex items-center space-x-3">
+            {lifeArea && <span className="text-2xl">{lifeArea.icon}</span>}
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                {quest.title}
+              </h2>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                {lifeArea?.name} • {quest.difficulty} • {quest.priority === 'high' ? 'High Priority' : 'Normal Priority'}
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="p-6 space-y-6">
+          {/* Quest Info */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description</h3>
+                <p className="text-gray-900 dark:text-white p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  {quest.description || 'No description provided'}
+                </p>
+              </div>
+
+              {quest.tags.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tags</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {quest.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Difficulty</h3>
+                  <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${difficultyColors[quest.difficulty]}`}>
+                    {quest.difficulty}
+                  </span>
+                </div>
+
+                <div>
+                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Rewards</h3>
+                  <div className="space-y-1">
+                    <div className="flex items-center space-x-1 text-sm">
+                      <span className="text-primary">⚡</span>
+                      <span className="font-medium">{quest.xpReward}</span>
+                      <span className="text-gray-600 dark:text-gray-400">XP</span>
+                    </div>
+                    <div className="flex items-center space-x-1 text-sm">
+                      <span className="text-warning">💰</span>
+                      <span className="font-medium">{quest.currencyReward}</span>
+                      <span className="text-gray-600 dark:text-gray-400">Goldens</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {quest.dueDate && (
+                <div>
+                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Due Date</h3>
+                  <p className="text-gray-900 dark:text-white">
+                    {new Date(quest.dueDate).toLocaleDateString()}
+                  </p>
+                </div>
+              )}
+
+              {isRecurring && recurringProgress && (
+                <div>
+                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Recurring Progress</h3>
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      {formatRecurringDescription(quest)}
+                    </p>
+                    <ProgressBar
+                      current={recurringProgress.completed}
+                      max={recurringProgress.target}
+                      color={recurringProgress.isCompleted ? "#10b981" : "#6366f1"}
+                      showText={true}
+                      animated={true}
+                    />
+                    {quest.recurrence!.streak > 0 && (
+                      <p className="text-sm text-warning">
+                        🔥 {quest.recurrence!.streak} streak
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Subtasks Section */}
+          <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
+            <SubtaskManagement quest={quest} subtasks={subtasks} />
+          </div>
         </div>
       </div>
     </div>

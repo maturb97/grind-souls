@@ -35,6 +35,7 @@ interface GameState {
   
   // Subtask actions
   createSubtask: (subtask: Partial<Subtask>) => Promise<void>;
+  updateSubtask: (id: string, updates: Partial<Subtask>) => Promise<void>;
   completeSubtask: (id: string) => Promise<void>;
   deleteSubtask: (id: string) => Promise<void>;
   
@@ -260,6 +261,15 @@ export const useGameStore = create<GameState>()(
             await get().refreshData();
           } catch (error) {
             console.error('Failed to create subtask:', error);
+          }
+        },
+
+        updateSubtask: async (id, updates) => {
+          try {
+            await db.subtasks.update(id, updates);
+            await get().refreshData();
+          } catch (error) {
+            console.error('Failed to update subtask:', error);
           }
         },
 
